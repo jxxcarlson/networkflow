@@ -85,6 +85,10 @@ edgeDoesNotMatch : String -> String -> Edge -> Bool
 edgeDoesNotMatch name1 name2 (Edge node1 node2 _) = 
   name1 /= (name node1) || name2 /= (name node2) 
  
+getEdge : String -> String -> Network -> Maybe Edge   
+getEdge sourceName sinkName (Network nodes edges) =
+  List.filter (edgeMatches sourceName sinkName) edges  
+    |> List.head
 
 --
 -- NETWORK
