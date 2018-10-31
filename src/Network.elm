@@ -40,6 +40,11 @@ findNode name_ (Network nodes edges) =
   List.filter (nodeHasName name_) nodes
     |> List.head
 
+findNodeInNodeList : String -> List Node -> Maybe Node
+findNodeInNodeList name_ nodeList = 
+  List.filter (nodeHasName name_) nodeList
+    |> List.head
+
 nodeCount : Network -> Int  
 nodeCount (Network nodes edges) =
   List.length nodes
@@ -69,6 +74,14 @@ edgeCount : Network -> Int
 edgeCount (Network nodes edges) =
   List.length edges
 
+edgeMatches : String -> String -> Edge -> Bool 
+edgeMatches name1 name2 (Edge node1 node2 _) = 
+  name1 == (name node1) && name2 == (name node2) 
+  
+edgeDoesNotMatch : String -> String -> Edge -> Bool 
+edgeDoesNotMatch name1 name2 (Edge node1 node2 _) = 
+  name1 /= (name node1) || name2 /= (name node2) 
+ 
 
 --
 -- NETWORK
@@ -93,6 +106,20 @@ insertEdge name1 name2 flow network =
   case maybeEdge of  
     Nothing -> network 
     Just edge -> adjoinEdge network edge 
+
+deleteEdge : String -> String -> Network -> Network
+deleteEdge name1 name2 (Network nodes edges) = 
+  let  
+    newEdges = List.filter (edgeDoesNotMatch name1 name2) edges  
+  in   
+    Network nodes newEdges
+
+replaceEdge : String -> String -> Float -> Network -> Network
+replaceEdge  name1 name2 flow network = 
+  let 
+    network2 = deleteEdge name1 name2 network
+  in  
+    insertEdge name1 name2 flow network2
 
 adjoinEdge : Network -> Edge -> Network 
 adjoinEdge (Network nodes edges) edge = 
