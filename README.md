@@ -43,13 +43,13 @@ One can make various computations:
 $ elm repl
 > import Network
 
-> listNodeNames net
+> listNodes net
 ["U1","U2","U3","U4"]
 
-> listEdgeNames net
+> listEdges net
 ["U1->U4","U1->U2","U4->U3","U2->U3"]
 
-> listEdgeNamesWithFlow net
+> listEdgesWithFlow net
 ["U1->U4: 30","U1->U2: 90.4","U4->U3: 22","U2->U3: 31.4"]
 
 > efficiency net
@@ -68,10 +68,10 @@ $ elm repl
 One can also inspect the structure of the network:
 
 ```
-> listNodeNames net
+> listNodes net
   ["U1","U2","U3","U4"]
 
-> listEdgeNamesWithFlow net
+> listEdgesWithFlow net
 ["U1->U4: 30","U1->U2: 90.4","U4->U3: 22","U2->U3: 31.4"]
 ```
 

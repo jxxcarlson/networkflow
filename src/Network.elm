@@ -1,11 +1,11 @@
 module Network exposing(..)
 
-import Json.Decode exposing(Decoder, map2, map3, maybe, 
+import Json.Decode exposing(Decoder, map, map2, map3, maybe, 
    field, string, float, list, decodeString)
 
 
 type Node =
-  Node String (Maybe String)
+  Node String 
 
 type Edge =
   Edge Node Node Float
@@ -23,10 +23,10 @@ type Network =
 
 createNode : String -> Node
 createNode name_ =
-  Node name_ Nothing
+  Node name_
 
 name : Node -> String
-name (Node name_ _) =
+name (Node name_) =
   name_
 
 equalNodes : Node -> Node -> Bool 
@@ -34,7 +34,7 @@ equalNodes node1 node2 =
   (name node1) == (name node2 )
 
 nodeHasName : String -> Node -> Bool
-nodeHasName name_ (Node nodeName _) =
+nodeHasName name_ (Node nodeName) =
   name_ == nodeName
 
 
@@ -133,8 +133,8 @@ adjoinEdge (Network nodes edges) edge =
   Network display functions
 -}
 
-listNodeNames : Network -> (List String)
-listNodeNames (Network nodes edges) =
+listNodes : Network -> (List String)
+listNodes (Network nodes edges) =
   List.map name nodes 
 
 edgeName :  Edge -> String 
@@ -149,12 +149,12 @@ edgeNameWithFlow : Edge -> String
 edgeNameWithFlow edge= 
     (edgeName edge) ++ ": " ++ (String.fromFloat (edgeFlow edge))
 
-listEdgeNames : Network -> (List String)
-listEdgeNames (Network nodes edges) =
+listEdges : Network -> (List String)
+listEdges (Network nodes edges) =
   List.map edgeName edges
 
-listEdgeNamesWithFlow : Network -> (List String)
-listEdgeNamesWithFlow (Network nodes edges) =
+listEdgesWithFlow : Network -> (List String)
+listEdgesWithFlow (Network nodes edges) =
   List.map edgeNameWithFlow edges
 
 
@@ -313,9 +313,8 @@ net = buildNetwork [u1, u2, u3, u4] [e14, e12, e43, e23 ]
 
 decodeNode : Decoder Node
 decodeNode =
-  map2 Node
+  map Node
     (field "name" string)
-    (maybe (field "imageHash" string))
 
 decodeEdge : Decoder Edge
 decodeEdge =
@@ -341,6 +340,23 @@ decodeSimpleEdge =
 decodeSimpleEdgeList : Decoder (List SimpleEdge)
 decodeSimpleEdgeList = 
   (field "edges" (list decodeSimpleEdge))
+
+getEdgesFromJson : String -> (List Edge)
+getEdgesFromJson jsonString =
+  case decodeString decodeSimpleEdgeList jsonString of  
+    Err _ -> [] 
+    Ok simpleEdgeList -> edgeListFromSimpleEdgeList simpleEdgeList
+
+
+edgeListFromSimpleEdgeList : List SimpleEdge -> List Edge
+edgeListFromSimpleEdgeList simpleEdgeList_ = 
+  List.map simpleEdgeToEdge simpleEdgeList_
+
+simpleEdgeToEdge : SimpleEdge -> Edge 
+simpleEdgeToEdge (SimpleEdge sourceName_ sinkName flow) =
+  Edge (createNode sourceName_) (createNode sinkName) flow
+
+
 
 simpleEdgeListAsJson = """
    { "edges": [
@@ -373,21 +389,17 @@ simpleEdgeListAsJson = """
 ---
 
 nodeA = """
-  {"name": "A",
-    "imageHash": ""
-  }
+  {"name": "A" }
 """
 
 nodeB = """
-  {"name": "B",
-    "imageHash": ""
-  }
+  {"name": "B"}
 """
 
 edgeAB = """
   {
-     "initialNode": {"name": "A", "imageHash": "" }, 
-     "terminalNode": {"name": "B", "imageHash": "" },
+     "initialNode": {"name": "A" }, 
+     "terminalNode": {"name": "B" },
      "flow": 17.3
   }
 """
@@ -395,8 +407,8 @@ edgeAB = """
 netAsJson1 = """
   { 
     "nodes": [
-      {"name": "A", "imageHash": "" }, 
-      {"name": "A", "imageHash": "" }
+      {"name": "A" }, 
+      {"name": "B" }
     ], 
     "edges": [
         {
@@ -459,47 +471,13 @@ sustainabilityPercentageOfNetworkAsJSON jsonString =
 -}
 
 
-netAsJson2 = """
+netAsJson = """
   {
     "nodes": [
-      {"name": "U1", "imageHash": "" }, 
-      {"name": "U2", "imageHash": "" },
-      {"name": "U3", "imageHash": "" }, 
-      {"name": "U2", "imageHash": "" }
-    ], 
-    "edges": [
-        {
-          "initialNode": {"name": "U1", "imageHash": "" }, 
-          "terminalNode": {"name": "U4", "imageHash": "" },
-          "flow": 30
-        },
-        {
-          "initialNode": {"name": "U1", "imageHash": "" }, 
-          "terminalNode": {"name": "U2", "imageHash": "" },
-          "flow": 90.4
-        },
-        {
-          "initialNode": {"name": "U4 ", "imageHash": "" }, 
-          "terminalNode": {"name": "U3", "imageHash": "" },
-          "flow": 22
-        },
-        {
-          "initialNode": {"name": "U2", "imageHash": "" }, 
-          "terminalNode": {"name": "U3", "imageHash": "" },
-          "flow": 31.4
-        }
-    ]
-  }
-
-"""
-
-altNetAsJson = """
-  {
-    "nodes": [
-      {"name": "U1", "imageHash": "" }, 
-      {"name": "U2", "imageHash": "" },
-      {"name": "U3", "imageHash": "" }, 
-      {"name": "U2", "imageHash": "" }
+      {"name": "U1" }, 
+      {"name": "U2" },
+      {"name": "U3" }, 
+      {"name": "U4" }
     ], 
     "edges": [
         {
