@@ -328,6 +328,46 @@ decodeNetwork =
     (field "edges" (list decodeEdge))
 
 
+type SimpleEdge = 
+  SimpleEdge String String Float 
+
+decodeSimpleEdge : Decoder SimpleEdge 
+decodeSimpleEdge =
+  map3 SimpleEdge 
+     (field "initialNode" string)
+     (field "terminalNode" string)
+     (field "flow" float)
+
+decodeSimpleEdgeList : Decoder (List SimpleEdge)
+decodeSimpleEdgeList = 
+  (field "edges" (list decodeSimpleEdge))
+
+simpleEdgeListAsJson = """
+   { "edges": [
+        {
+          "initialNode": "U1", 
+          "terminalNode": "U4",
+          "flow": 30
+        },
+        {
+          "initialNode": "U1", 
+          "terminalNode": "U2",
+          "flow": 90.4
+        },
+        {
+          "initialNode": "U4", 
+          "terminalNode": "U3",
+          "flow": 22
+        },
+        {
+          "initialNode": "U2", 
+          "terminalNode": "U3",
+          "flow": 31.4
+        }
+    ]
+  }
+"""
+
 ---
 --- Json.Decode Tests
 ---
@@ -446,6 +486,40 @@ netAsJson2 = """
         {
           "initialNode": {"name": "U2", "imageHash": "" }, 
           "terminalNode": {"name": "U3", "imageHash": "" },
+          "flow": 31.4
+        }
+    ]
+  }
+
+"""
+
+altNetAsJson = """
+  {
+    "nodes": [
+      {"name": "U1", "imageHash": "" }, 
+      {"name": "U2", "imageHash": "" },
+      {"name": "U3", "imageHash": "" }, 
+      {"name": "U2", "imageHash": "" }
+    ], 
+    "edges": [
+        {
+          "initialNode": "U1", 
+          "terminalNode": "U4",
+          "flow": 30
+        },
+        {
+          "initialNode": "U1", 
+          "terminalNode": "U2",
+          "flow": 90.4
+        },
+        {
+          "initialNode": "U4", 
+          "terminalNode": "U3",
+          "flow": 22
+        },
+        {
+          "initialNode": "U2", 
+          "terminalNode": "U3",
           "flow": 31.4
         }
     ]
