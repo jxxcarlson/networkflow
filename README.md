@@ -1,13 +1,11 @@
-
-
 # Network
 
-The Network module implements the Ulanowicz et al for 
+The Network module implements the Ulanowicz et al for
 efficiency, reliability, and sustainability of networks.
 The module has been written using Elm 0.19 and will
 have to be tested for 0.18. Minor changes may be required.
 
-The code is in `src/Network.elm`.  A network is described
+The code is in `src/Network.elm`. A network is described
 by nodes and edges. Here are the type definitions:
 
 ```
@@ -21,10 +19,9 @@ type Network =
   Network (List Node) (List Edge)
 ```
 
-
 ## Tests
 
-As an example,  we create a small network by hand:
+As an example, we create a small network by hand:
 
 ```
 u1 = createNode "U1"
@@ -43,8 +40,8 @@ net = buildNetwork [u1, u2, u3, u4] [e14, e12, e43, e23 ]
 One can make various computations:
 
 ```
-$ elm repl 
-> import Network 
+$ elm repl
+> import Network
 
 > listNodeNames net
 ["U1","U2","U3","U4"]
@@ -55,7 +52,7 @@ $ elm repl
 > listEdgeNamesWithFlow net
 ["U1->U4: 30","U1->U2: 90.4","U4->U3: 22","U2->U3: 31.4"]
 
-> > efficiency net
+> efficiency net
 154.677
 
 > resilience net
@@ -64,11 +61,10 @@ $ elm repl
 > alpha net
 0.5081441618940449 : Float
 
-> sustainabilityPercentage net 
+> sustainabilityPercentage net
 96.99 : Float
 ```
 
- 
 One can also inspect the structure of the network:
 
 ```
@@ -81,12 +77,10 @@ One can also inspect the structure of the network:
 
 ## Experiments
 
+### Adding/deleting an edge
 
-### Adding/deleting an edge 
-
-
-There are facilities for editing a given network in 
-order to experiment with changes in it. 
+There are facilities for editing a given network in
+order to experiment with changes in it.
 
 ```
 > net2 = insertEdge "U1" "U3" 20 net
@@ -98,14 +92,13 @@ order to experiment with changes in it.
 96.99 : Float
 ```
 
-To delete an edge, use 
+To delete an edge, use
 
 ```
-deleteEdge name1 name2  network 
+deleteEdge name1 name2  network
 ```
 
-
-### Modifying an edge  
+### Modifying an edge
 
 ```
 > net2 = replaceEdge "U1" "U4" 10 net
@@ -114,41 +107,38 @@ deleteEdge name1 name2  network
 91.54 : Float
 ```
 
-
 ## JSON Decoders
 
-Below is a JSON representation of netwrok 
-in the example above.  One can can test it like this:
-
-
+Below is a JSON representation of netwrok
+in the example above. One can can test it like this:
 
 ```
 netAsJson2 = """
   {
     "nodes": [
-      {"name": "U1", "imageHash": "" }, 
+      {"name": "U1", "imageHash": "" },
       {"name": "U2", "imageHash": "" },
-      {"name": "U3", "imageHash": "" }, 
+      {"name": "U3", "imageHash": "" },
       {"name": "U2", "imageHash": "" }
-    ], 
+    ],
     "edges": [
         {
-          "initialNode": {"name": "U1", "imageHash": "" }, 
+          "initialNode": {"name": "U1", "imageHash": "" },
           "terminalNode": {"name": "U4", "imageHash": "" },
           "flow": 30
         },
         {
-          "initialNode": {"name": "U1", "imageHash": "" }, 
+          "initialNode": {"name": "U1", "imageHash": "" },
           "terminalNode": {"name": "U2", "imageHash": "" },
           "flow": 90.4
         },
         {
-          "initialNode": {"name": "U4 ", "imageHash": "" }, 
+          "initialNode": {"name": "U4 ", "imageHash": "" },
           "terminalNode": {"name": "U3", "imageHash": "" },
           "flow": 22
         },
         {
-          "initialNode": {"name": "U2", "imageHash": "" }, 
+          "initialNode": {"name": "U2", "imageHash": "" },
           "terminalNode": {"name": "U3", "imageHash": "" },
           "flow": 31.4
         }
