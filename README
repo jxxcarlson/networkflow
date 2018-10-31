@@ -13,3 +13,27 @@ $ elm repl
 > efficiency net 
 > resilience net
 > sustainabilityPercentage net 
+```
+ 
+The example here is that of case 2:
+
+> listNodeNames net
+  ["U1","U2","U3","U4"]
+
+> listEdgeNamesWithFlow net
+["U1->U4: 30","U1->U2: 90.4","U4->U3: 22","U2->U3: 31.4"]
+
+> efficiency net
+154.67733751835925 : Float
+
+> resilience net
+149.71922770403455 : Float
+
+> alpha net
+0.5081441618940449 : Float
+
+> sustainabilityPercentage net
+0.97 : Float
+
+This is in agreement with the excel
+spreadsheet. 
