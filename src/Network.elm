@@ -10,6 +10,9 @@ type Node =
 type Edge =
   Edge Node Node Float
 
+type SimpleEdge = 
+  SimpleEdge String String Float 
+
 type Network =
   Network (List Node) (List Edge)
 
@@ -327,9 +330,6 @@ decodeNetwork =
     (field "nodes" (list decodeNode))
     (field "edges" (list decodeEdge))
 
-
-type SimpleEdge = 
-  SimpleEdge String String Float 
 
 decodeSimpleEdge : Decoder SimpleEdge 
 decodeSimpleEdge =
