@@ -1,0 +1,15 @@
+I haven't tested this file in Elm 0.18.  We may have to make some
+small changes for that.
+
+Look at the last few lines of `src/Network.elm`, beginning with  
+`-- TEST DATA`.  To run the example, do this (Elm 0.19)
+
+```
+$ elm repl 
+> import Network 
+> listNodeNames net
+> listEdgeNames net
+> listEdgeNamesWithFlow net
+> efficiency net 
+> resilience net
+> sustainabilityPercentage net 

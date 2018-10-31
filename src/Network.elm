@@ -61,6 +61,27 @@ listNodeNames (Network nodes edges) =
   List.map name nodes 
 
 
+edgeName :  Edge -> String 
+edgeName (Edge initialNode_ terminalNode_ flowRate) = 
+  (name initialNode_)
+  ++
+  "->"
+  ++
+  (name terminalNode_)
+  
+edgeNameWithFlow : Edge -> String 
+edgeNameWithFlow edge= 
+    (edgeName edge) ++ ": " ++ (String.fromFloat (edgeFlow edge))
+
+listEdgeNames : Network -> (List String)
+listEdgeNames (Network nodes edges) =
+  List.map edgeName edges
+
+listEdgeNamesWithFlow : Network -> (List String)
+listEdgeNamesWithFlow (Network nodes edges) =
+  List.map edgeNameWithFlow edges
+
+
 edgeHasOrigin : Node -> Edge -> Bool 
 edgeHasOrigin node edge = 
   equalNodes node (initialNode edge)  
@@ -172,7 +193,7 @@ roundTo places quantity =
   
 
 --
--- TEST DATA
+  -- TEST DATA
 --
 
 u1 = createNode "U1"
@@ -186,4 +207,6 @@ e43 = createEdge u4 u3 22
 e23 = createEdge u2 u3 31.4
 
 net = buildNetwork [u1, u2, u3, u4] [e14, e12, e43, e23 ]
+
+sus = sustainabilityPercentage net  
     
