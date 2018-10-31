@@ -30,6 +30,20 @@ equalNodes : Node -> Node -> Bool
 equalNodes node1 node2 =
   (name node1) == (name node2 )
 
+nodeHasName : String -> Node -> Bool
+nodeHasName name_ (Node nodeName _) =
+  name_ == nodeName
+
+
+findNode : String -> Network -> Maybe Node
+findNode name_ (Network nodes edges) = 
+  List.filter (nodeHasName name_) nodes
+    |> List.head
+
+nodeCount : Network -> Int  
+nodeCount (Network nodes edges) =
+  List.length nodes
+
 --
 -- EDGES
 --
@@ -51,6 +65,11 @@ terminalNode : Edge -> Node
 terminalNode (Edge initialNode_ terminalNode_ _) =
   terminalNode_ 
 
+edgeCount : Network -> Int  
+edgeCount (Network nodes edges) =
+  List.length edges
+
+
 --
 -- NETWORK
 -- 
@@ -62,6 +81,23 @@ buildNetwork : (List Node) -> (List Edge) -> Network
 buildNetwork node_ edges_ = 
   Network node_ edges_ 
 
+insertEdge : String -> String -> Float -> Network -> Network 
+insertEdge name1 name2 flow network = 
+  let  
+    maybeNode1 = findNode name1 network
+    maybeNode2 = findNode name2 network 
+    maybeEdge = case (maybeNode1, maybeNode2) of 
+      (Just node1, Just node2) -> Just (Edge node1 node2 flow)
+      (_, _) -> Nothing
+  in
+  case maybeEdge of  
+    Nothing -> network 
+    Just edge -> adjoinEdge network edge 
+
+adjoinEdge : Network -> Edge -> Network 
+adjoinEdge (Network nodes edges) edge = 
+  Network nodes (edge::edges)
+  
 
 {-
   Network display functions
@@ -186,7 +222,7 @@ resilience (Network nodes edges) =
 alpha : Network -> Float 
 alpha network = 
   let 
-    ratio = 1 + ((resilience net) / (efficiency net))
+    ratio = 1 + ((resilience network) / (efficiency network))
   in   
     1/ratio  
 
@@ -219,7 +255,9 @@ roundTo places quantity =
   in   
     (toFloat q3) / ff 
   
-
+displayList : List String -> String 
+displayList stringList = 
+  String.join "\n" stringList
 
 --
   -- NETWORK TEST DATA
@@ -236,6 +274,8 @@ e43 = createEdge u4 u3 22
 e23 = createEdge u2 u3 31.4
 
 net = buildNetwork [u1, u2, u3, u4] [e14, e12, e43, e23 ] 
+
+
     
 ---
 --- JSON DECODERS
