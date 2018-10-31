@@ -1,39 +1,77 @@
-I haven't tested this file in Elm 0.18.  We may have to make some
-small changes for that.
 
-Look at the last few lines of `src/Network.elm`, beginning with  
-`-- TEST DATA`.  To run the example, do this (Elm 0.19)
+
+# Network
+
+The Network module implements the Ulanowicz et al for 
+efficiency, reliability, and sustainability of networks.
+The module has been written using Elm 0.19 and will
+have to be tested for 0.18. Minor changes may be required.
+
+The code is in `src/Network.elm`.  A network is described
+by nodes and edges. Here are the type definitions:
+
+```
+type Node =
+  Node String (Maybe String)
+
+type Edge =
+  Edge Node Node Float
+
+type Network =
+  Network (List Node) (List Edge)
+```
+
+As an example,  we create a small network by hand:
+
+```
+u1 = createNode "U1"
+u2 = createNode "U2"
+u3 = createNode "U3"
+u4 = createNode "U4"
+
+e14 = createEdge u1 u4 30
+e12 = createEdge u1 u2 90.4
+e43 = createEdge u4 u3 22
+e23 = createEdge u2 u3 31.4
+
+net = buildNetwork [u1, u2, u3, u4] [e14, e12, e43, e23 ]
+```
+
+One can make various computations:
 
 ```
 $ elm repl 
 > import Network 
-> listNodeNames net
-> listEdgeNames net
-> listEdgeNamesWithFlow net
-> efficiency net 
-> resilience net
-> sustainabilityPercentage net 
-```
- 
-The example here is that of case 2:
 
+> listNodeNames net
+["U1","U2","U3","U4"]
+
+> listEdgeNames net
+["U1->U4","U1->U2","U4->U3","U2->U3"]
+
+> listEdgeNamesWithFlow net
+["U1->U4: 30","U1->U2: 90.4","U4->U3: 22","U2->U3: 31.4"]
+
+> > efficiency net
+154.677
+
+> resilience net
+149.719 : Float
+
+> alpha net
+0.5081441618940449 : Float
+
+> sustainabilityPercentage net 
+96.99 : Float
+```
+
+ 
+One can also inspect the structure of the network:
+
+```
 > listNodeNames net
   ["U1","U2","U3","U4"]
 
 > listEdgeNamesWithFlow net
 ["U1->U4: 30","U1->U2: 90.4","U4->U3: 22","U2->U3: 31.4"]
-
-> efficiency net
-154.67733751835925 : Float
-
-> resilience net
-149.71922770403455 : Float
-
-> alpha net
-0.5081441618940449 : Float
-
-> sustainabilityPercentage net
-0.97 : Float
-
-This is in agreement with the excel
-spreadsheet. 
+```
