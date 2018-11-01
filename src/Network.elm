@@ -161,7 +161,7 @@ listEdgesWithFlow (Network nodes edges) =
 
 {-|
 
-   Functions with Boolean values.s
+   Functions with Boolean values
 
 -}
 edgeHasOrigin : Node -> Edge -> Bool 
@@ -203,111 +203,8 @@ totalFlow (Network nodes edges) =
      List.map edgeFlow edges 
        |> List.sum 
 
+{- Simple Edges -}
 
-{-  
-  Functions for the model
- -}
-
-efficiencyOfEdge : Float ->  Network -> Edge ->Float 
-efficiencyOfEdge totalFlow_ network (Edge sourceNode sinkNode flow)  = 
-   let
-     edge = (Edge sourceNode sinkNode flow)
-     edgeFlow_ = edgeFlow edge
-     denominator = (outflowFromNode network sourceNode) * (inflowToNode network sinkNode)
-     numerator = (edgeFlow_) * totalFlow_
-     logRatio = (logBase 2)(numerator/denominator)
-   in
-     roundTo 3 (edgeFlow_ * logRatio)
-
-resilienceOfEdge : Float ->  Network -> Edge ->Float 
-resilienceOfEdge totalFlow_ network (Edge sourceNode sinkNode flow)  = 
-   let
-     edge = (Edge sourceNode sinkNode flow)
-     edgeFlow_ = edgeFlow edge
-     denominator = (outflowFromNode network sourceNode) * (inflowToNode network sinkNode)
-     numerator = edgeFlow_* edgeFlow_
-     logRatio = (logBase 2)(numerator/denominator)
-   in
-     edgeFlow_ * logRatio
-
-efficiency : Network -> Float 
-efficiency (Network nodes edges) =
-  let   
-    network = (Network nodes edges)
-    totalFlow_ = totalFlow network 
-  in 
-    List.map (efficiencyOfEdge totalFlow_ network) edges  
-      |> List.sum
-      |> \x -> roundTo 3 x
-
-resilience : Network -> Float 
-resilience (Network nodes edges) =
-  let   
-    network = (Network nodes edges)
-    totalFlow_ = totalFlow network 
-  in 
-    List.map (resilienceOfEdge totalFlow_ network) edges  
-      |> List.sum
-      |> \x -> -(roundTo 3 x)  
-
-alpha : Network -> Float 
-alpha network = 
-  let 
-    ratio = 1 + ((resilience network) / (efficiency network))
-  in   
-    1/ratio  
-
-sustainability : Network -> Float 
-sustainability network = 
-  let   
-    a = alpha network 
-    aa = a^1.288
-    s =  -1.844 * aa * (logBase 2 aa)
-  in 
-    roundTo 4 s
-
-sustainabilityPercentage : Network -> Float  
-sustainabilityPercentage network = 
-  roundTo 2 (100 * (sustainability network))
-
-{-
-
- Auxiliary functions
-
--}
-
-roundTo : Int -> Float -> Float 
-roundTo places quantity = 
-  let   
-    factor = 10^places
-    ff = (toFloat factor)
-    q2 = ff * quantity
-    q3 = round q2
-  in   
-    (toFloat q3) / ff 
-  
-displayList : List String -> String 
-displayList stringList = 
-  String.join "\n" stringList
-
---
-  -- NETWORK TEST DATA
---
-
-u1 = createNode "U1"
-u2 = createNode "U2"
-u3 = createNode "U3"
-u4 = createNode "U4"
-
-e14 = createEdge u1 u4 30
-e12 = createEdge u1 u2 90.4
-e43 = createEdge u4 u3 22
-e23 = createEdge u2 u3 31.4
-
-net = buildNetwork [u1, u2, u3, u4] [e14, e12, e43, e23 ] 
-
-
- 
 
 edgeListFromSimpleEdgeList : List SimpleEdge -> List Edge
 edgeListFromSimpleEdgeList simpleEdgeList_ = 
@@ -319,147 +216,13 @@ simpleEdgeToEdge (SimpleEdge sourceName_ sinkName flow) =
 
 
 
-simpleEdgeListAsJson = """
-   { "edges": [
-        {
-          "initialNode": "U1", 
-          "terminalNode": "U4",
-          "flow": 30
-        },
-        {
-          "initialNode": "U1", 
-          "terminalNode": "U2",
-          "flow": 90.4
-        },
-        {
-          "initialNode": "U4", 
-          "terminalNode": "U3",
-          "flow": 22
-        },
-        {
-          "initialNode": "U2", 
-          "terminalNode": "U3",
-          "flow": 31.4
-        }
-    ]
-  }
-"""
 
----
---- Json.Decode Tests
----
-
-nodeA = """
-  {"name": "A" }
-"""
-
-nodeB = """
-  {"name": "B"}
-"""
-
-edgeAB = """
-  {
-     "initialNode": {"name": "A" }, 
-     "terminalNode": {"name": "B" },
-     "flow": 17.3
-  }
-"""
-
-netAsJson1 = """
-  { 
-    "nodes": [
-      {"name": "A" }, 
-      {"name": "B" }
-    ], 
-    "edges": [
-        {
-          "initialNode": {"name": "A", "imageHash": "" }, 
-          "terminalNode": {"name": "B", "imageHash": "" },
-          "flow": 17.3
-        }
-    ]
-
-  }
-"""
-
-{-
-
-TESTS:
-
-> decodeString decodeNode nodeA
-Ok (Node "A" (Just ""))
-
-> decodeString decodeNode nodeB
-Ok (Node "B" (Just ""))
-
-> decodeString decodeEdge edgeAB
-Ok (Edge (Node "A" (Just "")) (Node "B" (Just "")) 17.3)
-    : Result Error Edge
-
-> decodeString decodeNetwork netAsJson1
-Ok (Network [Node "A" (Just ""),Node "A" (Just "")] [Edge (Node "A" (Just "")) (Node "B" (Just "")) 17.3])
+  
+displayList : List String -> String 
+displayList stringList = 
+  String.join "\n" stringList
 
 
--}
-
-
-{- 
-   A FURTHER TEST
-   --------------
-
-   The `testNetwork` function takes input a JSON string representation
-   of a network.  It converts that representation into an actual
-   Network value, then computes the sustainabilityPercentage for 
-   that network.  The sustainabilityPercentage exercises all 
-   significant parts of the Network module.
-
--}
-
-
-{-
-
-  Resuls of the test
-  ------------------
-
-  > sustainabilityPercentageOfNetworkAsJSON netAsJson2
-  96.99 : Float
-
--}
-
-
-netAsJson = """
-  {
-    "nodes": [
-      {"name": "U1" }, 
-      {"name": "U2" },
-      {"name": "U3" }, 
-      {"name": "U4" }
-    ], 
-    "edges": [
-        {
-          "initialNode": "U1", 
-          "terminalNode": "U4",
-          "flow": 30
-        },
-        {
-          "initialNode": "U1", 
-          "terminalNode": "U2",
-          "flow": 90.4
-        },
-        {
-          "initialNode": "U4", 
-          "terminalNode": "U3",
-          "flow": 22
-        },
-        {
-          "initialNode": "U2", 
-          "terminalNode": "U3",
-          "flow": 31.4
-        }
-    ]
-  }
-
-"""
 
 
 

@@ -1,11 +1,12 @@
 module Decoder exposing(..)
 
 import Network exposing(Node(..), Edge(..), Network(..), SimpleEdge(..), 
-  edgeListFromSimpleEdgeList, sustainabilityPercentage)
+  edgeListFromSimpleEdgeList)
+
+import Flow exposing(sustainabilityPercentage)
 
 import Json.Decode exposing(Decoder, map, map2, map3, maybe, 
    field, string, float, list, decodeString)
-
 
 
 getEdgesFromJson : String -> (List Edge)
@@ -25,6 +26,13 @@ sustainabilityPercentageOfNetworkAsJSON jsonString =
 --- JSON DECODERS
 ---
 
+decodeNetwork : Decoder Network 
+decodeNetwork =
+  map2 Network
+    (field "nodes" (list decodeNode))
+    (field "edges" (list decodeEdge))
+
+
 decodeNode : Decoder Node
 decodeNode =
   map Node
@@ -37,12 +45,7 @@ decodeEdge =
     (field "terminalNode" decodeNode)
     (field "flow" float)
 
-decodeNetwork : Decoder Network 
-decodeNetwork =
-  map2 Network
-    (field "nodes" (list decodeNode))
-    (field "edges" (list decodeEdge))
-
+{- Simple Edges -}
 
 decodeSimpleEdge : Decoder SimpleEdge 
 decodeSimpleEdge =

@@ -50,3 +50,68 @@ netAsJson = """
   }
 
 """
+simpleEdgeListAsJson = """
+   { "edges": [
+        {
+          "initialNode": "U1", 
+          "terminalNode": "U4",
+          "flow": 30
+        },
+        {
+          "initialNode": "U1", 
+          "terminalNode": "U2",
+          "flow": 90.4
+        },
+        {
+          "initialNode": "U4", 
+          "terminalNode": "U3",
+          "flow": 22
+        },
+        {
+          "initialNode": "U2", 
+          "terminalNode": "U3",
+          "flow": 31.4
+        }
+    ]
+  }
+"""
+
+
+---
+--- Json.Decode Tests
+---
+
+nodeA = """
+  {"name": "A" }
+"""
+
+nodeB = """
+  {"name": "B"}
+"""
+
+edgeAB = """
+  {
+     "initialNode": {"name": "A" }, 
+     "terminalNode": {"name": "B" },
+     "flow": 17.3
+  }
+"""
+
+
+
+netAsJson1 = """
+  { 
+    "nodes": [
+      {"name": "A" }, 
+      {"name": "B" }
+    ], 
+    "edges": [
+        {
+          "initialNode": {"name": "A", "imageHash": "" }, 
+          "terminalNode": {"name": "B", "imageHash": "" },
+          "flow": 17.3
+        }
+    ]
+
+  }
+"""
