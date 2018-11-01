@@ -94,9 +94,8 @@ getEdge sourceName sinkName (Network nodes edges) =
 -- NETWORK
 -- 
 
-{-| buildNetwork consructs a value of type Network
-    given a list of nodes and a list of edges
--}
+{- Build, Edit Network -}
+
 buildNetwork : (List Node) -> (List Edge) -> Network
 buildNetwork node_ edges_ = 
   Network node_ edges_ 
@@ -133,8 +132,66 @@ adjoinEdge (Network nodes edges) edge =
   Network nodes (edge::edges)
   
 
+
+{- Edges -}
+
+  
+edgeHasOrigin : Node -> Edge -> Bool 
+edgeHasOrigin node edge = 
+  equalNodes node (initialNode edge)  
+
+edgeHasTerminalNode: Node -> Edge -> Bool 
+edgeHasTerminalNode node edge = 
+  equalNodes node (terminalNode edge)  
+
+outgoingEdges : Network -> Node -> (List Edge)
+outgoingEdges (Network nodes edges) node = 
+  List.filter  (edgeHasOrigin node) edges
+
+incomingEdges : Network -> Node -> (List Edge)
+incomingEdges (Network nodes edges) node = 
+  List.filter  (edgeHasTerminalNode node) edges
+
+
+
+{- Flows -}
+
+outflowFromNode : Network -> Node -> Float 
+outflowFromNode network node =
+  (outgoingEdges network node ) 
+    |> List.map edgeFlow
+    |> List.sum
+  
+inflowToNode : Network -> Node -> Float 
+inflowToNode network node =
+  (incomingEdges network node ) 
+    |> List.map edgeFlow
+    |> List.sum
+
+totalFlow : Network -> Float 
+totalFlow (Network nodes edges) = 
+  let
+      network = Network nodes edges
+  in
+     List.map edgeFlow edges 
+       |> List.sum 
+
+
+{- Converters -}
+
+
+edgeListFromSimpleEdgeList : List SimpleEdge -> List Edge
+edgeListFromSimpleEdgeList simpleEdgeList_ = 
+  List.map simpleEdgeToEdge simpleEdgeList_
+
+simpleEdgeToEdge : SimpleEdge -> Edge 
+simpleEdgeToEdge (SimpleEdge sourceName_ sinkName flow) =
+  Edge (createNode sourceName_) (createNode sinkName) flow
+
+
+
 {-
-  Network display functions
+  Display
 -}
 
 listNodes : Network -> (List String)
@@ -160,65 +217,6 @@ listEdges (Network nodes edges) =
 listEdgesWithFlow : Network -> (List String)
 listEdgesWithFlow (Network nodes edges) =
   List.map edgeNameWithFlow edges
-
-
-{-|
-
-   Functions with Boolean values
-
--}
-edgeHasOrigin : Node -> Edge -> Bool 
-edgeHasOrigin node edge = 
-  equalNodes node (initialNode edge)  
-
-edgeHasTerminalNode: Node -> Edge -> Bool 
-edgeHasTerminalNode node edge = 
-  equalNodes node (terminalNode edge)  
-
-
-{- Functions to compute flows. -}
-
-outgoingEdges : Network -> Node -> (List Edge)
-outgoingEdges (Network nodes edges) node = 
-  List.filter  (edgeHasOrigin node) edges
-
-incomingEdges : Network -> Node -> (List Edge)
-incomingEdges (Network nodes edges) node = 
-  List.filter  (edgeHasTerminalNode node) edges
-
-outflowFromNode : Network -> Node -> Float 
-outflowFromNode network node =
-  (outgoingEdges network node ) 
-    |> List.map edgeFlow
-    |> List.sum
-  
-inflowToNode : Network -> Node -> Float 
-inflowToNode network node =
-  (incomingEdges network node ) 
-    |> List.map edgeFlow
-    |> List.sum
-
-totalFlow : Network -> Float 
-totalFlow (Network nodes edges) = 
-  let
-      network = Network nodes edges
-  in
-     List.map edgeFlow edges 
-       |> List.sum 
-
-{- Simple Edges -}
-
-
-edgeListFromSimpleEdgeList : List SimpleEdge -> List Edge
-edgeListFromSimpleEdgeList simpleEdgeList_ = 
-  List.map simpleEdgeToEdge simpleEdgeList_
-
-simpleEdgeToEdge : SimpleEdge -> Edge 
-simpleEdgeToEdge (SimpleEdge sourceName_ sinkName flow) =
-  Edge (createNode sourceName_) (createNode sinkName) flow
-
-
-
 
   
 displayList : List String -> String 

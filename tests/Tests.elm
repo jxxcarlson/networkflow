@@ -122,7 +122,7 @@ jsonSuite = describe "Json decoders"
       (Ok (Edge (Node "A") (Node "B") 17.3))
     , doTest
       "3. Consruct network from Json"
-      (getNetWorkFromJson netAsJson)
+      (netWorkFromJson netAsJson)
       (net2)
 
   ]
