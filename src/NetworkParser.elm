@@ -1,0 +1,68 @@
+module NetworkParser exposing(..)
+
+import Parser exposing(..)
+
+import Network exposing(SimpleEdge(..), Edge(..))
+
+
+simpleEdgeListParser : Parser (List SimpleEdge)
+simpleEdgeListParser = 
+  many simpleEdgeParser
+
+simpleEdgeParser : Parser SimpleEdge 
+simpleEdgeParser = 
+  succeed SimpleEdge  
+    |= identifier 
+    |. symbol ","
+    |. spaces  
+    |= identifier 
+    |. symbol ","
+    |. spaces   
+    |= float  
+    |. symbol ";"
+    |. spaces    
+
+identifier : Parser String
+identifier =
+  getChompedString <|
+    succeed ()
+      |. chompIf isStartChar
+      |. chompWhile isInnerChar
+
+isStartChar : Char -> Bool
+isStartChar char =
+  Char.isAlpha char
+
+isInnerChar : Char -> Bool
+isInnerChar char =
+  isStartChar char || Char.isDigit char
+
+{-| Apply a parser zero or more times and return a list of the results.
+-}
+many : Parser a -> Parser (List a)
+many p =
+    loop [] (manyHelp p)
+
+manyHelp : Parser a -> List a -> Parser (Step (List a) (List a))
+manyHelp p vs =
+    oneOf
+        [ succeed (\v -> Loop (v :: vs))
+            |= p
+            |. spaces
+        , succeed ()
+            |> map (\_ -> Done (List.reverse vs))
+        ]
+
+
+simpleEdgeListFromString : String -> (List SimpleEdge)
+simpleEdgeListFromString str = 
+  case run simpleEdgeListParser str of 
+    Err _ -> []
+    Ok edgeList -> edgeList
+
+edgeListFromString : String -> (List Edge)
+edgeListFromString str = 
+  simpleEdgeListFromString str 
+    |> Network.edgeListFromSimpleEdgeList
+
+

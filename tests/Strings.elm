@@ -78,6 +78,7 @@ simpleEdgeListAsJson = """
   }
 """
 
+netAsString = "U1, U4, 30; U1, U2, 90.4; U4, U3, 22; U2, U3, 31.4;"
 
 ---
 --- Json.Decode Tests

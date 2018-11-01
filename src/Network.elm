@@ -91,6 +91,27 @@ getEdge sourceName sinkName (Network nodes edges) =
     |> List.head
 
 --
+-- SIMPLE EDGES
+--
+
+
+edgeListFromSimpleEdgeList : List SimpleEdge -> List Edge
+edgeListFromSimpleEdgeList simpleEdgeList_ = 
+  List.map simpleEdgeToEdge simpleEdgeList_
+
+simpleEdgeToEdge : SimpleEdge -> Edge 
+simpleEdgeToEdge (SimpleEdge sourceName_ sinkName flow) =
+  Edge (createNode sourceName_) (createNode sinkName) flow
+
+sourceNameOfSimpleEdge : SimpleEdge -> String  
+sourceNameOfSimpleEdge (SimpleEdge sourceName sinkName _) =
+  sourceName
+
+sinkNameOfSimpleEdge : SimpleEdge -> String  
+sinkNameOfSimpleEdge (SimpleEdge sourceName sinkName _) =
+  sinkName
+
+--
 -- NETWORK
 -- 
 
@@ -175,19 +196,6 @@ totalFlow (Network nodes edges) =
   in
      List.map edgeFlow edges 
        |> List.sum 
-
-
-{- Converters -}
-
-
-edgeListFromSimpleEdgeList : List SimpleEdge -> List Edge
-edgeListFromSimpleEdgeList simpleEdgeList_ = 
-  List.map simpleEdgeToEdge simpleEdgeList_
-
-simpleEdgeToEdge : SimpleEdge -> Edge 
-simpleEdgeToEdge (SimpleEdge sourceName_ sinkName flow) =
-  Edge (createNode sourceName_) (createNode sinkName) flow
-
 
 
 {-

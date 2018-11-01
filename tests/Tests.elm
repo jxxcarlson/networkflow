@@ -126,7 +126,7 @@ jsonSuite = describe "Json decoders"
       (Ok (SimpleEdge "A" "B" 17.3))
     , doTest
       "4. Construct network from Json"
-      (netWorkFromJson netAsJson)
+      (networkFromJson netAsJson)
       (net2)
 
   ]
