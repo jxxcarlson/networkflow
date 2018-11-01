@@ -1,10 +1,20 @@
+module Main exposing(main)
+
 import Browser
 import Element exposing(..)
+import Element.Font as Font
 import Html exposing(Html)
 import Network exposing(
      Network(..)
      , emptyNetwork 
     )
+import FlowModel exposing(
+    exampleNetwork
+    , displayListWithTitle
+    , displayNodes
+    , displayEdges
+    , report
+  )
 
 
 main =
@@ -52,7 +62,19 @@ view model =
 
 mainRow : Model -> Element msg
 mainRow model =
-    row [ width fill, centerY, centerX ]
-        [
-         el [ centerX ] (text model.message)
-        ]
+  column [width fill, centerX, centerY, spacing 40, Font.size 16 ] [
+    el [Font.bold, centerX] (text "Network")
+    , row [centerX, spacing 60 ] (networkDisplay model)
+  ]
+ 
+      
+
+networkDisplay : model -> List (Element msg)
+networkDisplay model = 
+     [
+           column dataColumnStyle (displayListWithTitle "Nodes" <| displayNodes exampleNetwork)
+         , column dataColumnStyle (displayListWithTitle "Edges" <| displayEdges exampleNetwork)
+         , column [centerX, alignTop ] [report exampleNetwork]
+     ]
+
+dataColumnStyle = [centerX, spacing 10, alignTop, scrollbarX, height (px 300)]
