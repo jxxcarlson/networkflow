@@ -13,6 +13,8 @@ type SimpleEdge =
 type Network =
   Network (List Node) (List Edge)
 
+
+
 emptyNetwork : Network 
 emptyNetwork = 
   Network [] []
@@ -110,6 +112,7 @@ sourceNameOfSimpleEdge (SimpleEdge sourceName sinkName _) =
 sinkNameOfSimpleEdge : SimpleEdge -> String  
 sinkNameOfSimpleEdge (SimpleEdge sourceName sinkName _) =
   sinkName
+
 
 --
 -- NETWORK
