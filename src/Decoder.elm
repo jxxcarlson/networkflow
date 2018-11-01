@@ -26,21 +26,16 @@ sustainabilityPercentageOfNetworkAsJSON jsonString =
 --- JSON DECODERS
 ---
 
-decodeNetwork : Decoder Network 
-decodeNetwork =
-  map2 Network
-    (field "nodes" (list decodeNode))
-    (field "edges" (list decodeEdge))
 
-decodeSimpleNetwork : Decoder Network 
-decodeSimpleNetwork = 
+decodeNetwork : Decoder Network 
+decodeNetwork = 
   map2 Network
     (field "nodes" (list decodeNode))
     (field "edges" (map edgeListFromSimpleEdgeList (list decodeSimpleEdge)))
 
 getNetWorkFromJson : String -> Network 
 getNetWorkFromJson jsonString = 
-  case decodeString decodeSimpleNetwork jsonString of 
+  case decodeString decodeNetwork jsonString of 
      Err _ -> emptyNetwork 
      Ok network -> network
 
