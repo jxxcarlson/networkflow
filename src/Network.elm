@@ -1,8 +1,5 @@
 module Network exposing(..)
 
-import Json.Decode exposing(Decoder, map, map2, map3, maybe, 
-   field, string, float, list, decodeString)
-
 
 type Node =
   Node String 
@@ -310,47 +307,7 @@ e23 = createEdge u2 u3 31.4
 net = buildNetwork [u1, u2, u3, u4] [e14, e12, e43, e23 ] 
 
 
-    
----
---- JSON DECODERS
----
-
-decodeNode : Decoder Node
-decodeNode =
-  map Node
-    (field "name" string)
-
-decodeEdge : Decoder Edge
-decodeEdge =
-  map3 Edge
-    (field "initialNode" decodeNode)
-    (field "terminalNode" decodeNode)
-    (field "flow" float)
-
-decodeNetwork : Decoder Network 
-decodeNetwork =
-  map2 Network
-    (field "nodes" (list decodeNode))
-    (field "edges" (list decodeEdge))
-
-
-decodeSimpleEdge : Decoder SimpleEdge 
-decodeSimpleEdge =
-  map3 SimpleEdge 
-     (field "initialNode" string)
-     (field "terminalNode" string)
-     (field "flow" float)
-
-decodeSimpleEdgeList : Decoder (List SimpleEdge)
-decodeSimpleEdgeList = 
-  (field "edges" (list decodeSimpleEdge))
-
-getEdgesFromJson : String -> (List Edge)
-getEdgesFromJson jsonString =
-  case decodeString decodeSimpleEdgeList jsonString of  
-    Err _ -> [] 
-    Ok simpleEdgeList -> edgeListFromSimpleEdgeList simpleEdgeList
-
+ 
 
 edgeListFromSimpleEdgeList : List SimpleEdge -> List Edge
 edgeListFromSimpleEdgeList simpleEdgeList_ = 
@@ -458,11 +415,6 @@ Ok (Network [Node "A" (Just ""),Node "A" (Just "")] [Edge (Node "A" (Just "")) (
 
 -}
 
-sustainabilityPercentageOfNetworkAsJSON : String -> Float 
-sustainabilityPercentageOfNetworkAsJSON jsonString = 
-  case decodeString decodeNetwork jsonString of   
-     Ok network -> sustainabilityPercentage network
-     Err _ -> -1.0
 
 {-
 
