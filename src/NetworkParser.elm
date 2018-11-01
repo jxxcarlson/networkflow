@@ -88,7 +88,7 @@ nodeNamesFromString str  =
     sourceNodeNames = simpleEdgeList |> List.map sourceNameOfSimpleEdge
     sinkNodeNames = simpleEdgeList |> List.map sinkNameOfSimpleEdge
   in   
-    sourceNodeNames ++ sinkNodeNames |> unique
+    sourceNodeNames ++ sinkNodeNames |> unique |> List.sort
 
 nodesFromString : String -> List Node   
 nodesFromString str = 

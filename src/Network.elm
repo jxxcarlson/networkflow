@@ -213,13 +213,13 @@ edgeName :  Edge -> String
 edgeName (Edge initialNode_ terminalNode_ flowRate) = 
   (name initialNode_)
   ++
-  "->"
+  "–"
   ++
   (name terminalNode_)
   
 edgeNameWithFlow : Edge -> String 
 edgeNameWithFlow edge= 
-    (edgeName edge) ++ ": " ++ (String.fromFloat (edgeFlow edge))
+    (edgeName edge) ++ " " ++ (String.fromFloat (edgeFlow edge))
 
 listEdges : Network -> (List String)
 listEdges (Network nodes edges) =

@@ -15,6 +15,7 @@ import Network exposing(
     , listEdgesWithFlow
     , nodeCount
     , edgeCount
+    , totalFlow
    )
 import Flow exposing(
     efficiency
@@ -36,9 +37,10 @@ type alias Item =
 summarize : Network -> List Item
 summarize network = 
   [
-       { label = "Nodes", value = String.fromInt <| nodeCount network }
+        { label = "Nodes", value = String.fromInt <| nodeCount network }
       , { label = "Edges", value = String.fromInt <| edgeCount network } 
-      ,  { label = "Efficiency", value = String.fromFloat <| (roundTo 0) <| efficiency network }
+      , { label = "Total flow", value = String.fromFloat <| (roundTo 0) <| totalFlow network }
+      , { label = "Efficiency", value = String.fromFloat <| (roundTo 0) <| efficiency network }
       , { label = "Resilience", value = String.fromFloat <| (roundTo 0) <| resilience network }
       , { label = "Sustainability", value = String.fromFloat <| (roundTo 0) <| sustainabilityPercentage network }
 
@@ -81,11 +83,13 @@ displayListWithTitle title list =
 displayNodes : Network -> List(Element msg)
 displayNodes network = 
   listNodes network 
+    |> List.sort
     |> List.map (\node -> Element.row [] [text node])
 
 displayEdges : Network -> List(Element msg)
 displayEdges network = 
-  listEdgesWithFlow network 
+  listEdgesWithFlow network
+    |> List.sort 
     |> List.map (\edge -> Element.row [] [text edge])
 
 exampleNetwork : Network
