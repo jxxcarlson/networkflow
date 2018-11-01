@@ -38,33 +38,41 @@ summarize network =
   [
        { label = "Nodes", value = String.fromInt <| nodeCount network }
       , { label = "Edges", value = String.fromInt <| edgeCount network } 
-      ,  { label = "Efficiency", value = String.fromFloat <| (roundTo 1) <| efficiency network }
-      , { label = "Resilience", value = String.fromFloat <| (roundTo 1) <| resilience network }
-      , { label = "Sustainability", value = String.fromFloat <| (roundTo 1) <| sustainabilityPercentage network }
+      ,  { label = "Efficiency", value = String.fromFloat <| (roundTo 0) <| efficiency network }
+      , { label = "Resilience", value = String.fromFloat <| (roundTo 0) <| resilience network }
+      , { label = "Sustainability", value = String.fromFloat <| (roundTo 0) <| sustainabilityPercentage network }
 
 
   ]
   
 report : Network -> Element msg
 report network = 
-    Element.table [Element.spacing 10, Element.width (px 240) ]
+    Element.table [Element.spacing 10, Element.width (px 160) ]
         { data = summarize network
         , columns =
             [ { header = el [Font.bold] (Element.text "Measure")
-            , width = Element.fill
-            , view =
-                    \datum ->
-                        Element.text datum.label
-            }
-            , { header = el [Font.bold] (Element.text "Value")
-            , width = Element.fill
-            , view =
-                    \datum ->
-                        Element.el [alignRight] (Element.text datum.value)
-            }
+                , width = (px 40)
+                , view =
+                        \datum ->
+                            Element.text datum.label
+              }
+            , { header = el [Font.bold] <| alignRightElement 90 "Value"
+                , width = (px 90)
+                , view =
+                        \datum -> alignRightElement 90 datum.value
+                            -- Element.el [Element.width (px 90)] (
+                            --         Element.el [alignRight] (Element.text datum.value))
+
+              }
             ]
         }
     
+
+alignRightElement : Int -> String -> Element msg 
+alignRightElement width_ str = 
+  Element.el [Element.width (px width_)] (
+        Element.el [alignRight] (Element.text str)
+ )
 
 displayListWithTitle : String -> List(Element msg) -> List(Element msg)
 displayListWithTitle title list = 

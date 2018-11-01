@@ -63,7 +63,7 @@ view model =
 mainRow : Model -> Element msg
 mainRow model =
   column [width fill, centerX, centerY, spacing 40, Font.size 16 ] [
-    el [Font.bold, centerX] (text "Network")
+    el [Font.bold, Font.size 24, centerX] (text "Network")
     , row [centerX, spacing 60 ] (networkDisplay model)
   ]
  
