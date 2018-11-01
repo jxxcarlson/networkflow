@@ -99,9 +99,15 @@ edgeAB = """
   }
 """
 
+simpleEdgeAB = """
+  {
+     "initialNode": "A", 
+     "terminalNode": "B",
+     "flow": 17.3
+  }
+"""
 
-
-netAsJson1 = """
+tinyNetAsJson = """
   { 
     "nodes": [
       {"name": "A" }, 
@@ -109,8 +115,8 @@ netAsJson1 = """
     ], 
     "edges": [
         {
-          "initialNode": {"name": "A", "imageHash": "" }, 
-          "terminalNode": {"name": "B", "imageHash": "" },
+          "initialNode": "A", 
+          "terminalNode": "B",
           "flow": 17.3
         }
     ]

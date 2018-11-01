@@ -113,15 +113,19 @@ flowSuite = describe "Test flows"
 jsonSuite = describe "Json decoders"
   [
     doTest
-      "1. decode Node"
+      "1. Decode node"
       (decodeString decodeNode nodeAAsJson)
       (Ok (Node "A"))
     , doTest
-      "2. decode Edge"
+      "2. Decode edge"
       (decodeString decodeEdge edgeABAsJson)
       (Ok (Edge (Node "A") (Node "B") 17.3))
     , doTest
-      "3. Consruct network from Json"
+      "3. Decode simple edge"
+      (decodeString decodeSimpleEdge simpleEdgeAB)
+      (Ok (SimpleEdge "A" "B" 17.3))
+    , doTest
+      "4. Construct network from Json"
       (netWorkFromJson netAsJson)
       (net2)
 

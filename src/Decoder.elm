@@ -9,8 +9,13 @@ import Json.Decode exposing(Decoder, map, map2, map3, maybe,
    field, string, float, list, decodeString)
 
 
-netWorkFromJson : String -> Network 
-netWorkFromJson jsonString = 
+---
+--- BUILD
+---
+
+
+networkFromJson : String -> Network 
+networkFromJson jsonString = 
   case decodeString decodeNetwork jsonString of 
      Err _ -> emptyNetwork 
      Ok network -> network
@@ -45,7 +50,9 @@ decodeEdge =
     (field "terminalNode" decodeNode)
     (field "flow" float)
 
-{- Simple Edges -}
+---
+--- SIMPLE EDGES
+---
 
 decodeSimpleEdge : Decoder SimpleEdge 
 decodeSimpleEdge =

@@ -10,7 +10,7 @@ by nodes and edges. Here are the type definitions:
 
 ```
 type Node =
-  Node String (Maybe String)
+  Node String
 
 type Edge =
   Edge Node Node Float
@@ -37,11 +37,14 @@ e23 = createEdge u2 u3 31.4
 net = buildNetwork [u1, u2, u3, u4] [e14, e12, e43, e23 ]
 ```
 
-One can make various computations:
+These definitions can be found in `tests/Example.elm`.
+Thus we can make various computations as follows.
 
 ```
 $ elm repl
-> import Network
+> import Examples exposing(..)
+> import Network expsoing(..)
+> import Flow exposing(..)
 
 > listNodes net
 ["U1","U2","U3","U4"]
@@ -65,19 +68,17 @@ $ elm repl
 96.99 : Float
 ```
 
-One can also inspect the structure of the network:
+To see the structure of `net`, do this:
 
 ```
-> listNodes net
-  ["U1","U2","U3","U4"]
-
-> listEdgesWithFlow net
-["U1->U4: 30","U1->U2: 90.4","U4->U3: 22","U2->U3: 31.4"]
+> net
+Network [Node "U1",Node "U2",Node "U3",Node "U4"] [Edge (Node "U1") (Node "U4") 30,Edge (Node "U1") (Node "U2") 90.4,Edge (Node "U4") (Node "U3") 22,Edge (Node "U2") (Node "U3") 31.4]
+    : Network
 ```
 
 ## Experiments
 
-### Adding/deleting an edge
+### Adding an edge
 
 There are facilities for editing a given network in
 order to experiment with changes in it.
@@ -87,15 +88,25 @@ order to experiment with changes in it.
 
 > sustainabilityPercentage net2
 81.11 : Float
-
-> sustainabilityPercentage net
-96.99 : Float
 ```
 
-To delete an edge, use
+Note that inserting this edge decreased the sustainability.
+
+### Deleting an edge
+
+To delete an edge, use this syntax
 
 ```
 deleteEdge name1 name2  network
+```
+
+Here is another experiment:
+
+```
+> net2 = deleteEdge "U1" "U4" net
+
+> sustainabilityPercentage net2
+73.02 : Float
 ```
 
 ### Modifying an edge
@@ -109,37 +120,37 @@ deleteEdge name1 name2  network
 
 ## JSON Decoders
 
-Below is a JSON representation of netwrok
-in the example above. One can can test it like this:
+Below is a JSON representation of network
+we have been working with.
 
 ```
-netAsJson2 = """
+netAsJson = """
   {
     "nodes": [
-      {"name": "U1", "imageHash": "" },
-      {"name": "U2", "imageHash": "" },
-      {"name": "U3", "imageHash": "" },
-      {"name": "U2", "imageHash": "" }
+      {"name": "U1" },
+      {"name": "U2" },
+      {"name": "U3" },
+      {"name": "U4" }
     ],
     "edges": [
         {
-          "initialNode": {"name": "U1", "imageHash": "" },
-          "terminalNode": {"name": "U4", "imageHash": "" },
+          "initialNode": "U1",
+          "terminalNode": "U4",
           "flow": 30
         },
         {
-          "initialNode": {"name": "U1", "imageHash": "" },
-          "terminalNode": {"name": "U2", "imageHash": "" },
+          "initialNode": "U1",
+          "terminalNode": "U2",
           "flow": 90.4
         },
         {
-          "initialNode": {"name": "U4 ", "imageHash": "" },
-          "terminalNode": {"name": "U3", "imageHash": "" },
+          "initialNode": "U4",
+          "terminalNode": "U3",
           "flow": 22
         },
         {
-          "initialNode": {"name": "U2", "imageHash": "" },
-          "terminalNode": {"name": "U3", "imageHash": "" },
+          "initialNode": "U2",
+          "terminalNode": "U3",
           "flow": 31.4
         }
     ]
@@ -147,3 +158,13 @@ netAsJson2 = """
 
 """
 ```
+
+We can use it as follows:
+
+```
+> import Strings exposing(..) -- netAsJson is defined here
+> import Decoder exposing(..) -- For: netWorkFromJson : String -> Network
+> net = networkFromJson netAsJson
+```
+
+You an chadk that this is the same `net` that was defined before.
