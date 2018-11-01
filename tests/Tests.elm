@@ -33,6 +33,10 @@ e23 = createEdge u2 u3 31.4
 
 net = buildNetwork [u1, u2, u3, u4] [e14, e12, e43, e23 ] 
 
+net2 = Network 
+         [Node "U1",Node "U2",Node "U3",Node "U4"] 
+         [Edge (Node "U1") (Node "U4") 30,Edge (Node "U1") (Node "U2") 90.4,Edge (Node "U4") (Node "U3") 22,Edge (Node "U2") (Node "U3") 31.4]
+
 --
   -- NETWORK TEST DATA
 --
@@ -116,5 +120,11 @@ jsonSuite = describe "Json decoders"
       "2. decode Edge"
       (decodeString decodeEdge edgeABAsJson)
       (Ok (Edge (Node "A") (Node "B") 17.3))
+    , doTest
+      "3. Consruct network from Json"
+      (getNetWorkFromJson netAsJson)
+      (net2)
 
   ]
+
+ 

@@ -13,6 +13,9 @@ type SimpleEdge =
 type Network =
   Network (List Node) (List Edge)
 
+emptyNetwork : Network 
+emptyNetwork = 
+  Network [] []
 
 --
 -- NODES
