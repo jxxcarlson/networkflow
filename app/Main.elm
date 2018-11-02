@@ -5,12 +5,15 @@ import Element exposing(..)
 import Element.Font as Font
 import Element.Input as Input
 import Html exposing(Html)
+import Html.Attributes
 import Network exposing(
      Network(..)
      , emptyNetwork 
     )
 import NetworkParser exposing(networkFromString)
 import Widget
+import Svg exposing (svg)
+import Display
 
 import FlowModel exposing(
     exampleNetwork
@@ -39,11 +42,16 @@ type alias Model = {
     , networkAsString : String
     , network : Network }
 
+initialNetworkString = """U1, U4, 30; U1, U2, 90.4; U4, U3, 22; U2, U3, 31.4;
+V1, V4, 30; V1, V2, 90.4; V4, V3, 22; V2, V3, 31.4;
+U1, V1, 30;
+"""
+
 initialModel : Model  
 initialModel = 
   { message = "Hello!"
-  , networkAsString =  "U1, U4, 30; U1, U2, 90.4; U4, U3, 22; U2, U3, 31.4;"
-  , network =  networkFromString "U1, U4, 30; U1, U2, 90.4; U4, U3, 22; U2, U3, 31.4;"
+  , networkAsString =  initialNetworkString
+  , network =  networkFromString initialNetworkString
 
  }
 
@@ -88,7 +96,8 @@ mainRow model =
 networkDisplay : Model -> List (Element msg)
 networkDisplay model = 
      [
-           column dataColumnStyle (displayListWithTitle "Nodes" <| displayNodes model.network)
+           column  [centerX, alignTop] [displayNetwork model]
+         , column dataColumnStyle (displayListWithTitle "Nodes" <| displayNodes model.network)
          , column dataColumnStyle (displayListWithTitle "Edges" <| displayEdges model.network)
          , column [centerX, alignTop ] [report model.network]
      ]
@@ -114,3 +123,12 @@ updateNetworkButton model =
     onPress =  Just UpdateNetwork
   , label = Element.text "Update Network"
   } 
+
+
+displayNetwork : Model -> Element msg
+displayNetwork model =
+    Element.html 
+      (svg [ Html.Attributes.width 400, Html.Attributes.height 400 ] (Display.networkDisplay 200 model.network))
+
+    
+

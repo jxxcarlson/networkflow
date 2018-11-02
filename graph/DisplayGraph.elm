@@ -186,7 +186,7 @@ graphDisplay scale graph =
 
 
 boundingBoxData =
-    { center = (Vector 0 0)
+    { center = (Vector 100 0)
     , dimensions = (Vector 2 2)
     , strokeColor = lineSegmentColor
     , fillColor = boundingBoxColor
