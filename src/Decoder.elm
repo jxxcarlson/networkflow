@@ -1,17 +1,45 @@
 module Decoder exposing(..)
 
 import Network exposing(Node(..), Edge(..), Network(..), SimpleEdge(..), 
-  edgeListFromSimpleEdgeList, emptyNetwork)
+  sourceNameOfSimpleEdge, sinkNameOfSimpleEdge, createNode
+  , edgeListFromSimpleEdgeList, emptyNetwork)
 
 import Flow exposing(sustainabilityPercentage)
 
 import Json.Decode exposing(Decoder, map, map2, map3, maybe, 
    field, string, float, list, decodeString)
-
+   
+import Tools exposing(unique)
 
 ---
 --- BUILD
 ---
+
+networkFromJson2 : String -> Network   
+networkFromJson2 str =
+  Network (nodesFromJson str) (edgesFromJson str)
+
+
+
+simpleEdgeListFromJson : String -> List (SimpleEdge) 
+simpleEdgeListFromJson jsonString = 
+  case decodeString decodeSimpleEdgeList jsonString of 
+     Err _ -> []
+     Ok edgeList -> edgeList
+
+
+nodesFromJson : String -> (List Node)
+nodesFromJson str = 
+  nodeNamesFromJson str |> List.map createNode
+
+nodeNamesFromJson : String -> (List String)
+nodeNamesFromJson str  =
+  let 
+    simpleEdgeList = simpleEdgeListFromJson str
+    sourceNodeNames = simpleEdgeList |> List.map sourceNameOfSimpleEdge
+    sinkNodeNames = simpleEdgeList |> List.map sinkNameOfSimpleEdge
+  in   
+    sourceNodeNames ++ sinkNodeNames |> unique |> List.sort
 
 
 networkFromJson : String -> Network 

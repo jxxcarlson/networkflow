@@ -1,7 +1,6 @@
 module NetworkParser exposing(..)
 
 import Parser exposing(..)
-import Set exposing(Set)
 
 import Network exposing(
       Network(..)
@@ -11,6 +10,8 @@ import Network exposing(
       , createNode
       , sourceNameOfSimpleEdge
       , sinkNameOfSimpleEdge)
+
+import Tools exposing(unique)
 
 
 simpleEdgeListParser : Parser (List SimpleEdge)
@@ -96,25 +97,25 @@ nodesFromString str =
     |> List.map createNode
 
 
-unique : List comparable -> List comparable
-unique list =
-    uniqueHelp identity Set.empty list []
+-- unique : List comparable -> List comparable
+-- unique list =
+--     uniqueHelp identity Set.empty list []
 
 
-uniqueHelp : (a -> comparable) -> Set comparable -> List a -> List a -> List a
-uniqueHelp f existing remaining accumulator =
-    case remaining of
-        [] ->
-            List.reverse accumulator
+-- uniqueHelp : (a -> comparable) -> Set comparable -> List a -> List a -> List a
+-- uniqueHelp f existing remaining accumulator =
+--     case remaining of
+--         [] ->
+--             List.reverse accumulator
 
-        first :: rest ->
-            let
-                computedFirst =
-                    f first
-            in
-            if Set.member computedFirst existing then
-                uniqueHelp f existing rest accumulator
+--         first :: rest ->
+--             let
+--                 computedFirst =
+--                     f first
+--             in
+--             if Set.member computedFirst existing then
+--                 uniqueHelp f existing rest accumulator
 
-            else
-                uniqueHelp f (Set.insert computedFirst existing) rest (first :: accumulator)
+--             else
+--                 uniqueHelp f (Set.insert computedFirst existing) rest (first :: accumulator)
 

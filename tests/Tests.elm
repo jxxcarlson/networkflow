@@ -128,6 +128,15 @@ jsonSuite = describe "Json decoders"
       "4. Construct network from Json"
       (networkFromJson netAsJson)
       (net2)
+    , doTest
+      "5. Construct simple edge list from JSON"
+      (decodeString decodeSimpleEdgeList simpleEdgeListAsJson)
+      (Ok [SimpleEdge "U1" "U4" 30,SimpleEdge "U1" "U2" 90.4,SimpleEdge "U4" "U3" 22,SimpleEdge "U2" "U3" 31.4])
+    , doTest
+      "6. Construct simple edge list from JSON"
+      (simpleEdgeListFromJson simpleEdgeListAsJson)
+      ([SimpleEdge "U1" "U4" 30,SimpleEdge "U1" "U2" 90.4,SimpleEdge "U4" "U3" 22,SimpleEdge "U2" "U3" 31.4])
+    
 
   ]
 
