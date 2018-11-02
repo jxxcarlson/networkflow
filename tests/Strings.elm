@@ -11,9 +11,9 @@ nodeBAsJson = """
 
 edgeABAsJson = """
   {
-     "initialNode": {"name": "A" }, 
-     "terminalNode": {"name": "B" },
-     "flow": 17.3
+     "from": {"name": "A" }, 
+     "to": {"name": "B" },
+     "amount": 17.3
   }
 """
 
@@ -27,24 +27,24 @@ netAsJson = """
     ], 
     "edges": [
         {
-          "initialNode": "U1", 
-          "terminalNode": "U4",
-          "flow": 30
+          "from": "U1", 
+          "to": "U4",
+          "amount": 30
         },
         {
-          "initialNode": "U1", 
-          "terminalNode": "U2",
-          "flow": 90.4
+          "from": "U1", 
+          "to": "U2",
+          "amount": 90.4
         },
         {
-          "initialNode": "U4", 
-          "terminalNode": "U3",
-          "flow": 22
+          "from": "U4", 
+          "to": "U3",
+          "amount": 22
         },
         {
-          "initialNode": "U2", 
-          "terminalNode": "U3",
-          "flow": 31.4
+          "from": "U2", 
+          "to": "U3",
+          "amount": 31.4
         }
     ]
   }
@@ -55,28 +55,30 @@ netAsJson = """
 simpleEdgeListAsJson = """
    { "edges": [
         {
-          "initialNode": "U1", 
-          "terminalNode": "U4",
-          "flow": 30
+          "from": "U1", 
+          "to": "U4",
+          "amount": 30
         },
         {
-          "initialNode": "U1", 
-          "terminalNode": "U2",
-          "flow": 90.4
+          "from": "U1", 
+          "to": "U2",
+          "amount": 90.4
         },
         {
-          "initialNode": "U4", 
-          "terminalNode": "U3",
-          "flow": 22
+          "from": "U4", 
+          "to": "U3",
+          "amount": 22
         },
         {
-          "initialNode": "U2", 
-          "terminalNode": "U3",
-          "flow": 31.4
+          "from": "U2", 
+          "to": "U3",
+          "amount": 31.4
         }
     ]
   }
 """
+
+
 
 netAsString = "U1, U4, 30; U1, U2, 90.4; U4, U3, 22; U2, U3, 31.4;"
 
@@ -94,17 +96,17 @@ nodeB = """
 
 edgeAB = """
   {
-     "initialNode": {"name": "A" }, 
-     "terminalNode": {"name": "B" },
-     "flow": 17.3
+     "from": {"name": "A" }, 
+     "to": {"name": "B" },
+     "amount": 17.3
   }
 """
 
 simpleEdgeAB = """
   {
-     "initialNode": "A", 
-     "terminalNode": "B",
-     "flow": 17.3
+     "from": "A", 
+     "to": "B",
+     "amount": 17.3
   }
 """
 
@@ -116,9 +118,9 @@ tinyNetAsJson = """
     ], 
     "edges": [
         {
-          "initialNode": "A", 
-          "terminalNode": "B",
-          "flow": 17.3
+          "from": "A", 
+          "to": "B",
+          "amount": 17.3
         }
     ]
 

@@ -74,9 +74,9 @@ decodeNode =
 decodeEdge : Decoder Edge
 decodeEdge =
   map3 Edge
-    (field "initialNode" decodeNode)
-    (field "terminalNode" decodeNode)
-    (field "flow" float)
+    (field "from" decodeNode)
+    (field "to" decodeNode)
+    (field "amount" float)
 
 ---
 --- SIMPLE EDGES
@@ -85,9 +85,9 @@ decodeEdge =
 decodeSimpleEdge : Decoder SimpleEdge 
 decodeSimpleEdge =
   map3 SimpleEdge 
-     (field "initialNode" string)
-     (field "terminalNode" string)
-     (field "flow" float)
+     (field "from" string)
+     (field "to" string)
+     (field "amount" float)
 
 decodeSimpleEdgeList : Decoder (List SimpleEdge)
 decodeSimpleEdgeList = 

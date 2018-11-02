@@ -134,24 +134,24 @@ netAsJson = """
     ],
     "edges": [
         {
-          "initialNode": "U1",
-          "terminalNode": "U4",
-          "flow": 30
+          "from": "U1",
+          "to": "U4",
+          "amount": 30
         },
         {
-          "initialNode": "U1",
-          "terminalNode": "U2",
-          "flow": 90.4
+          "from": "U1",
+          "to": "U2",
+          "amount": 90.4
         },
         {
-          "initialNode": "U4",
-          "terminalNode": "U3",
-          "flow": 22
+          "from": "U4",
+          "to": "U3",
+          "amount": 22
         },
         {
-          "initialNode": "U2",
-          "terminalNode": "U3",
-          "flow": 31.4
+          "from": "U2",
+          "to": "U3",
+          "amount": 31.4
         }
     ]
   }
