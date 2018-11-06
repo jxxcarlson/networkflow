@@ -4,6 +4,7 @@ import DisplayGraph exposing(Vertex, Graph)
 import Network  exposing(Network(..))
 import Dict exposing(Dict)
 import Svg exposing (Svg)
+import Edge exposing(..)
 
 
 networkDisplay : Float -> Network -> List (Svg msg)
@@ -13,7 +14,7 @@ networkDisplay scale network =
 graphFromNetwork : Network -> Graph
 graphFromNetwork network = 
   let   
-    dict = makeNodeDicionary network
+    dict = makeNodeDictionary network
     vertices = vertexList network 
     edges = graphEdgesFromNetwork dict network   
   in 
@@ -29,8 +30,8 @@ vertexList network =
 
 type alias NodeDictionary =  Dict String Int   
 
-makeNodeDicionary : Network -> NodeDictionary    
-makeNodeDicionary network = 
+makeNodeDictionary : Network -> NodeDictionary    
+makeNodeDictionary network = 
     Dict.fromList <|
       List.indexedMap 
         (\index label -> (label, index + 1))
@@ -43,15 +44,15 @@ nodeIndex dict nodeName =
 
 
 
-graphEdgeFromNetworkEdge : NodeDictionary -> Network.Edge -> (Int, Int)
-graphEdgeFromNetworkEdge dict (Network.Edge from to _) =
+graphEdgeFromNetworkEdge : NodeDictionary -> Network.Edge -> Edge
+graphEdgeFromNetworkEdge dict (Network.Edge from to flow) =
   let  
     f = nodeIndex dict (Network.name from)
     t = nodeIndex dict (Network.name to)
   in  
-    (f,t)
+    Edge f t (String.fromFloat flow)
 
-graphEdgesFromNetwork : NodeDictionary -> Network -> List (Int, Int)
+graphEdgesFromNetwork : NodeDictionary -> Network -> List Edge
 graphEdgesFromNetwork dict (Network nodes edges) = 
   List.map 
     (graphEdgeFromNetworkEdge dict)

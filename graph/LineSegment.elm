@@ -15,6 +15,7 @@ import ColorRecord exposing (..)
 import Svg as S exposing (..)
 import Svg.Attributes exposing (..)
 import Vector exposing (Vector)
+import SvgText
 
 
 {-| A record which models a line segment with
@@ -26,6 +27,7 @@ type alias LineSegment =
     , width : Float
     , strokeColor : ColorRecord
     , fillColor : ColorRecord
+    , label : String
     }
 
 
@@ -45,9 +47,23 @@ affineTransform coefficients lineSegment =
 
 {-| Produce an SVG representation of a lineSegment.
 -}
-draw : LineSegment -> S.Svg msg
+draw : LineSegment -> List (S.Svg msg)
 draw segment =
-    S.line (lineAttributes segment) []
+   let   
+    n_x = -(segment.a.y - segment.b.y)
+    n_y = segment.a.x - segment.b.x
+    normSquared = n_x*n_x + n_y*n_y
+    norm = sqrt normSquared
+    un_x = n_x/norm  
+    un_y = n_y/norm
+    k = -15
+    x_mid = (segment.a.x + segment.b.x)/2 + k*un_x
+    y_mid = (segment.a.y + segment.b.y)/2 + k*un_y
+  in
+    [
+        S.line (lineAttributes segment) []
+      , SvgText.textDisplay 12 x_mid y_mid segment.label
+    ]
 
 
 {-| Move a lineSegment to a new position: translante
@@ -95,7 +111,7 @@ scaleBy factor lineSegment =
 
 
 lineAttributes : LineSegment -> List (Attribute msg)
-lineAttributes lineSegment =
+lineAttributes lineSegment =  
     [ fill (rgba lineSegment.fillColor)
     , stroke (rgba lineSegment.fillColor)
     , x1 (String.fromFloat lineSegment.a.x)

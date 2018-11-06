@@ -5,7 +5,7 @@ import Svg.Attributes exposing (..)
 
 
 textDisplay : Int -> Float -> Float -> String -> Svg msg 
-textDisplay fontSize_ x_ y_ content = 
+textDisplay fontSize_ x_ y_  content = 
   text_ [ 
       x <| String.fromFloat x_ 
     , y <| String.fromFloat y_
@@ -21,5 +21,6 @@ main =
     [ 
        textDisplay 24 10 40 "Fruit:"
      , textDisplay 24 10 80 "Bananas"
-     , textDisplay 24 10 120 "Apples"
+     , svg [rotate "45"] [textDisplay 24 10 120 "Apples"]
     ]
+

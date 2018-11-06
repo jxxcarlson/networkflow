@@ -7,7 +7,7 @@ import Element.Input as Input
 import Html exposing(Html)
 import Html.Attributes
 import Network exposing(
-     Network(..)
+       Network(..)
      , emptyNetwork 
     )
 import NetworkParser exposing(networkFromString)
