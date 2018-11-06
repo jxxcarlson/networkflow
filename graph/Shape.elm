@@ -15,6 +15,7 @@ import ColorRecord exposing (..)
 import Svg as S exposing (..)
 import Svg.Attributes exposing (..)
 import Vector exposing (Vector)
+import SvgText
 
 
 {-| A type for representing shapes: rectangles or ellipses
@@ -32,6 +33,7 @@ type alias ShapeData =
     , dimensions : Vector
     , strokeColor : ColorRecord
     , fillColor : ColorRecord
+    , label : String
     }
 
 
@@ -57,14 +59,18 @@ affineTransform coefficients shape =
 
 {-| Produce an SVG representation of a shape.
 -}
-draw : Shape -> S.Svg msg
+draw : Shape -> List (S.Svg msg)
 draw shape =
+    let   
+        deltaX = 15
+        deltaY = 15
+    in
     case shape of
         Rect data_ ->
-            S.rect (svgRectAttributes data_) []
+            [S.rect (svgRectAttributes data_) [], SvgText.textDisplay 14 (data_.center.x + deltaX) (data_.center.y + deltaY) data_.label]
 
         Ellipse data_ ->
-            S.ellipse (svgEllipseAttributes data_) []
+            [S.ellipse (svgEllipseAttributes data_) [], SvgText.textDisplay 14 (data_.center.x + deltaX) (data_.center.y + deltaY) data_.label]
 
 
 updateData : Shape -> ShapeData -> Shape

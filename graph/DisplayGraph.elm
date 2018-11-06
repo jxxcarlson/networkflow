@@ -14,6 +14,7 @@ import ColorRecord exposing (..)
 import LineSegment exposing (..)
 import Svg exposing (Svg)
 import Edge exposing(..)
+import SvgText
 
 
 {-| A graph is s record with two fields - list of vertices
@@ -56,20 +57,21 @@ boundingBoxColor =
 getPoints : Graph -> List Vector
 getPoints graph =
     let
-        points =
-            []
-
         n =
             List.length graph.vertices
+
+        vertexLabels = graph.vertices |> List.map .label
 
         theta =
             2 * 3.14159265 / (toFloat n)
 
         point =
-            rotate (Vector 1 0) theta
-    in
-        List.range 0 (n - 1)
-            |> List.foldl (\k acc -> (acc ++ [ point k ])) []
+            rotate (Vector 1 0 "") theta
+        
+        points = List.range 0 (n - 1)
+            |> List.foldl (\k acc -> (acc ++ [ point k ])) []  
+    in       
+        List.map2 (\point_ label -> {point_ | label = label}) points vertexLabels
 
 
 rotate : Vector -> Float -> Int -> Vector
@@ -123,7 +125,8 @@ renderPoints centers =
         size =
             0.5 / (toFloat (List.length centers))
     in
-        centers |> List.map (\center -> makeCircle size center)
+        centers |> List.map (\center ->  makeCircle size center)
+          -- |> List.concat
 
 
 renderSegments : List Vector.DirectedSegment -> List LineSegment
@@ -135,7 +138,7 @@ makeCircle : Float -> Vector -> Shape
 makeCircle size center =
     let
         shapeData =
-            ShapeData center (Vector size size) vertexColor vertexColor
+            ShapeData center (Vector size size "") vertexColor vertexColor center.label
     in
         Ellipse shapeData
 
@@ -173,30 +176,33 @@ graphDisplay scale graph =
         renderedPoints =
             renderPoints points
                 |> List.map (Shape.scaleBy (k * scale))
-                |> List.map (Shape.moveBy (Vector (kk * scale) scale))
+                |> List.map (Shape.moveBy (Vector (kk * scale) scale ""))
                 |> List.map Shape.draw
+                |> List.concat
 
         renderedSegments =
             segments
                 |> renderSegments
                 |> List.map (LineSegment.scaleBy (k * scale))
-                |> List.map (LineSegment.moveBy (Vector (kk * scale) scale))
+                |> List.map (LineSegment.moveBy (Vector (kk * scale) scale ""))
                 |> List.map LineSegment.draw
                 |> List.concat
     in
-        renderedSegments ++ renderedPoints ++ [ boundingBox scale ]
+        renderedSegments ++ renderedPoints ++ (boundingBox scale)
 
 
 boundingBoxData =
-    { center = (Vector 100 0)
-    , dimensions = (Vector 2 2)
+    { center = (Vector 100 0 "")
+    , dimensions = (Vector 2 2 "")
     , strokeColor = lineSegmentColor
     , fillColor = boundingBoxColor
+    , label = ""
     }
 
 
 boundingBox scale =
     Rect boundingBoxData
         |> Shape.scaleBy (1.2 * scale)
-        |> (Shape.moveBy (Vector (scale) (scale)))
+        |> (Shape.moveBy (Vector (scale) (scale) ""))
         |> Shape.draw
+    
