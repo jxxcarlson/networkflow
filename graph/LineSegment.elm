@@ -46,6 +46,14 @@ affineTransform coefficients lineSegment =
 
 
 {-| Produce an SVG representation of a lineSegment.
+  (n_x, n_y)     = normal vector to segment
+  (un_x, un_y)   = unit normal
+  (unn_x, unn_y) = the unit normal with positive y component
+  The label is drawn, to  first approximation, at a point
+  obtained by translating the midpoint of the segment 
+  a distance   k   along the unit normal with positive
+  y-component.  It is rotated around that point so that
+  the baseline of the text is parallel to the segment.
 -}
 draw : LineSegment -> List (S.Svg msg)
 draw segment =
@@ -56,13 +64,21 @@ draw segment =
     norm = sqrt normSquared
     un_x = n_x/norm  
     un_y = n_y/norm
-    k = -15
-    x_mid = (segment.a.x + segment.b.x)/2 + k*un_x
-    y_mid = (segment.a.y + segment.b.y)/2 + k*un_y
+    ut_x = (segment.b.x - segment.a.x)/norm
+    ut_y = (segment.b.y - segment.a.y)/norm
+    utt_x = if ut_x > 0 then ut_x else ( -ut_x)
+    utt_y = if un_x > 0 then ut_y else ( -ut_y)
+    unn_y = if un_y > 0 then un_y else ( -un_y)
+    unn_x = if un_y > 0 then un_x else ( -un_x)
+    a = -8
+    b = 0
+    x_mid = (segment.a.x + segment.b.x)/2 + a*unn_x + b*utt_x
+    y_mid = (segment.a.y + segment.b.y)/2 + a*unn_y + b*utt_y
+    angle = (57.29564553  * (acos unn_x)) - 90
   in
     [
         S.line (lineAttributes segment) []
-      , SvgText.textDisplay 12 x_mid y_mid segment.label
+      , SvgText.textDisplay 12 x_mid y_mid angle segment.label
     ]
 
 
