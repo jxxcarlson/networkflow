@@ -4,6 +4,7 @@ import DisplayGraph exposing(Vertex, Graph)
 import Network  exposing(Network(..))
 import Dict exposing(Dict)
 import Svg exposing (Svg)
+import Edge exposing(..)
 
 
 networkDisplay : Float -> Network -> List (Svg msg)
@@ -43,15 +44,15 @@ nodeIndex dict nodeName =
 
 
 
-graphEdgeFromNetworkEdge : NodeDictionary -> Network.Edge -> (Int, Int)
+graphEdgeFromNetworkEdge : NodeDictionary -> Network.Edge -> Edge
 graphEdgeFromNetworkEdge dict (Network.Edge from to _) =
   let  
     f = nodeIndex dict (Network.name from)
     t = nodeIndex dict (Network.name to)
   in  
-    (f,t)
+    Edge f t "-"
 
-graphEdgesFromNetwork : NodeDictionary -> Network -> List (Int, Int)
+graphEdgesFromNetwork : NodeDictionary -> Network -> List Edge
 graphEdgesFromNetwork dict (Network nodes edges) = 
   List.map 
     (graphEdgeFromNetworkEdge dict)

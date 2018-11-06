@@ -12,6 +12,7 @@ import Shape exposing (..)
 import ColorRecord exposing (..)
 import LineSegment exposing (..)
 import Svg exposing (Svg)
+import Edge exposing(..)
 
 
 {-| A graph is s record with two fields - list of vertices
@@ -27,11 +28,10 @@ type alias Vertex =
     { id : Int, label : String }
 
 
-{-| A an edge is a tupe of integers, where the two elements
-are the ids of vertices.
--}
-type alias Edge =
-    ( Int, Int )
+   
+
+
+
 
 {- 
 
@@ -103,10 +103,10 @@ edgeToSegment : List ( Int, Vector ) -> Edge -> Maybe Vector.DirectedSegment
 edgeToSegment indexedPoints edge =
     let
         maybeA =
-            getPoint indexedPoints (Tuple.first edge)
+            getPoint indexedPoints (first edge)
 
         maybeB =
-            getPoint indexedPoints (Tuple.second edge)
+            getPoint indexedPoints (second edge)
     in
         case ( maybeA, maybeB ) of
             ( Just a, Just b ) ->
