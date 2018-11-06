@@ -128,8 +128,7 @@ updateNetworkButton model =
 displayNetwork : Model -> Element msg
 displayNetwork model =
     Element.html 
-      (svg [Html.Attributes.width 400, Html.Attributes.height 400] [Svg.text "Hello"])
-     -- (svg [ Html.Attributes.width 400, Html.Attributes.height 400 ] (Display.networkDisplay 200 model.network))
+      (svg [ Html.Attributes.width 400, Html.Attributes.height 400 ] (Display.networkDisplay 200 model.network))
 
     
 
