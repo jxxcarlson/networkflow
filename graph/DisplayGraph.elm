@@ -1,4 +1,5 @@
-module DisplayGraph exposing (Graph, Vertex, graphDisplay)
+module DisplayGraph exposing (..)
+-- (Graph, Vertex, graphDisplay)
 
 {-| DisplayGraph provides tools for constructing graphs and
 rendering them into SVG.
@@ -110,7 +111,7 @@ edgeToSegment indexedPoints edge =
     in
         case ( maybeA, maybeB ) of
             ( Just a, Just b ) ->
-                Just (Vector.DirectedSegment a b)
+                Just (Vector.DirectedSegment a b (label edge))
 
             _ ->
                 Nothing
@@ -141,7 +142,7 @@ makeCircle size center =
 
 makeLine : Vector.DirectedSegment -> LineSegment
 makeLine segment =
-    LineSegment segment.a segment.b 2.5 lineSegmentColor lineSegmentColor
+    LineSegment segment.a segment.b 2.5 lineSegmentColor lineSegmentColor segment.label
 
 
 {-| graphDisplay takes a number and a graph as arguments
@@ -181,6 +182,7 @@ graphDisplay scale graph =
                 |> List.map (LineSegment.scaleBy (k * scale))
                 |> List.map (LineSegment.moveBy (Vector (kk * scale) scale))
                 |> List.map LineSegment.draw
+                |> List.concat
     in
         renderedSegments ++ renderedPoints ++ [ boundingBox scale ]
 

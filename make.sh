@@ -1,1 +1,1 @@
- elm make  app/Main.elm
+ elm make  --debug app/Main.elm

@@ -31,7 +31,7 @@ type alias Vector =
 {-| A directed line segment with endponts a and b.
 -}
 type alias DirectedSegment =
-    { a : Vector, b : Vector }
+    { a : Vector, b : Vector, label : String  }
 
 
 {-| The dot product of vectors.
