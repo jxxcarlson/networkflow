@@ -140,4 +140,28 @@ jsonSuite = describe "Json decoders"
 
   ]
 
+jsonXX = """
+{"value":"1 BES","to":"james1111111","symbol":"BES","memo":"","from":"lucca1111111","block_time":"2018-11-03T18:48:52.500"}
+"""
  
+jsonSuite2 = describe "Json decoders"
+  [
+    doTest
+      "1. Decode simple edge"
+      (decodeString decodeSimpleEdge simpleEdgeAB)
+      (Ok (SimpleEdge "A" "B" 17.3))
+    , doTest
+      "4. Construct network from Json"
+      (networkFromJson netAsJson)
+      (net2)
+    , doTest
+      "5. Construct simple edge list from JSON"
+      (decodeString decodeSimpleEdgeList simpleEdgeListAsJson)
+      (Ok [SimpleEdge "U1" "U4" 30,SimpleEdge "U1" "U2" 90.4,SimpleEdge "U4" "U3" 22,SimpleEdge "U2" "U3" 31.4])
+    , doTest
+      "6. Construct simple edge list from JSON"
+      (simpleEdgeListFromJson simpleEdgeListAsJson)
+      ([SimpleEdge "U1" "U4" 30,SimpleEdge "U1" "U2" 90.4,SimpleEdge "U4" "U3" 22,SimpleEdge "U2" "U3" 31.4])
+    
+
+  ]

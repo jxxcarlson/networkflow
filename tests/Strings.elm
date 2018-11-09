@@ -126,3 +126,22 @@ tinyNetAsJson = """
 
   }
 """
+
+ex2 = """
+  {"data":[
+      {"value":"1 BES","to":"james1111111","symbol":"BES","memo":"","from":"lucca1111111","block_time":"2018-11-03T18:48:52.500"}
+      ,{"value":"2 BES","to":"karla1111111","symbol":"BES","memo":"","from":"lucca1111111","block_time":"2018-11-05T19:57:06.000"}
+      ,{"value":"10 BES","to":"karla1111111","symbol":"BES","memo":"","from":"lucca1111111","block_time":"2018-11-06T19:45:50.500"}
+      ,{"value":"15 BES","to":"lucca1111111","symbol":"BES","memo":"","from":"lucca1111141","block_time":"2018-11-06T20:09:07.500"}
+    ]
+    }
+"""
+
+ex1 = """
+  [
+      {"value":"1 BES","to":"james1111111","symbol":"BES","memo":"","from":"lucca1111111","block_time":"2018-11-03T18:48:52.500"}
+      ,{"value":"2 BES","to":"karla1111111","symbol":"BES","memo":"","from":"lucca1111111","block_time":"2018-11-05T19:57:06.000"}
+      ,{"value":"10 BES","to":"karla1111111","symbol":"BES","memo":"","from":"lucca1111111","block_time":"2018-11-06T19:45:50.500"}
+      ,{"value":"15 BES","to":"lucca1111111","symbol":"BES","memo":"","from":"lucca1111141","block_time":"2018-11-06T20:09:07.500"}
+    ]
+"""
