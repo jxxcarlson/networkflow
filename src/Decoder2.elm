@@ -6,28 +6,24 @@ import Network exposing(Node(..), Edge(..), Network(..), SimpleEdge(..),
 
 import Flow exposing(sustainabilityPercentage)
 
-import Json.Decode exposing(Decoder, map, map2, map3, maybe, 
-   field, string, float, list, decodeString)
+import Json.Decode exposing(Decoder, map, map3, field, string, float, list, decodeString)
    
 import Tools exposing(unique)
 
 import ParserTools
 
----
---- BUILD
----
 
+{-| Build network from Json string 
+-}
 networkFromJson : String -> Network   
 networkFromJson     str =
   Network (nodesFromJson str) (edgesFromJson str)
 
 
 
-simpleEdgeListFromJson : String -> List (SimpleEdge) 
-simpleEdgeListFromJson jsonString = 
-  case decodeString decodeSimpleEdgeList jsonString of 
-     Err _ -> []
-     Ok edgeList -> edgeList
+--
+-- HELPER FUNCTIONS
+--
 
 
 nodesFromJson : String -> (List Node)
@@ -42,8 +38,6 @@ nodeNamesFromJson str  =
     sinkNodeNames = simpleEdgeList |> List.map sinkNameOfSimpleEdge
   in   
     sourceNodeNames ++ sinkNodeNames |> unique |> List.sort
-
-
 
 simpleEdgesFromJson : String -> (List SimpleEdge)
 simpleEdgesFromJson jsonString =
@@ -61,37 +55,6 @@ edgesFromJson jsonString =
 ---
 --- JSON DECODERS
 ---
-
-
-decodeNetwork : Decoder Network 
-decodeNetwork = 
-  (field "data" decodeNetworkAux)
-
-decodeNetworkAux : Decoder Network 
-decodeNetworkAux = 
-  map2 Network
-    (field "nodes" (list decodeNode))
-    (field "edges" (map edgeListFromSimpleEdgeList (list decodeSimpleEdge)))
-
-decodeNode : Decoder Node
-decodeNode =
-  map Node
-    (field "name" string)
-
-decodeEdge : Decoder Edge
-decodeEdge =
-  map3 Edge
-    (field "from" decodeNode)
-    (field "to" decodeNode)
-    (field "amount" float)
-
----
---- SIMPLE EDGES
----
-
-jsss = """{"value":"1 BES","to":"james1111111","symbol":"BES","memo":"","from":"lucca1111111","block_time":"2018-11-03T18:48:52.500"}"""
-
-
 
 
 decodeEdgesFromData : Decoder (List SimpleEdge)
@@ -112,11 +75,3 @@ decodeSimpleEdge =
      (field "to" string)
      (field "value" string |> map ParserTools.flowRateFromString)
 
-
-
-
-
-jsonXX = """
-{"value":"1 BES","to":"james1111111","symbol":"BES","memo":"","from":"lucca1111111","block_time":"2018-11-03T18:48:52.500"}
-"""
- 
