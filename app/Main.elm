@@ -113,15 +113,27 @@ update msg model =
                     else
                         model.networkAsString
 
+                avatarList =
+                    [ ( "AA", "https://s3.amazonaws.com/noteimages/jxxcarlson/hello.jpg" )
+                    , ( "BB", "https://s3.amazonaws.com/noteimages/jxxcarlson/hello.jpg" )
+                    ]
+
                 newNetwork =
                     networkFromString newNetworkAsString
-                        |> Network.changeNodeInfoInNetwork "AA" "https://s3.amazonaws.com/noteimages/jxxcarlson/hello.jpg"
 
+                updateNetwork : ( String, String ) -> Network -> Network
+                updateNetwork ( nodeName, imageUrl ) network_ =
+                    Network.changeNodeInfoInNetwork nodeName imageUrl network_
+
+                newNetwork2 =
+                    List.foldl updateNetwork newNetwork avatarList
+
+                --         |> Network.changeNodeInfoInNetwork "AA" "https://s3.amazonaws.com/noteimages/jxxcarlson/hello.jpg"
                 -- changeNodeInfoInList nodeName nodeInfo nodeList
             in
                 ( { model
                     | networkAsString = newNetworkAsString
-                    , network = newNetwork
+                    , network = newNetwork2
                   }
                 , Cmd.none
                 )
