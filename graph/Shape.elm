@@ -34,6 +34,7 @@ type alias ShapeData =
     , strokeColor : ColorRecord
     , fillColor : ColorRecord
     , label : String
+    , info : String
     }
 
 
@@ -61,16 +62,19 @@ affineTransform coefficients shape =
 -}
 draw : Shape -> List (S.Svg msg)
 draw shape =
-    let   
-        deltaX = -8
-        deltaY = 30
-    in
-    case shape of
-        Rect data_ ->
-            [S.rect (svgRectAttributes data_) [], SvgText.textDisplay 14 (data_.center.x + deltaX) (data_.center.y + deltaY) 0 data_.label]
+    let
+        deltaX =
+            -8
 
-        Ellipse data_ ->
-            [S.ellipse (svgEllipseAttributes data_) [], SvgText.textDisplay 14 (data_.center.x + deltaX) (data_.center.y + deltaY) 0 data_.label]
+        deltaY =
+            30
+    in
+        case shape of
+            Rect data_ ->
+                [ S.rect (svgRectAttributes data_) [], SvgText.textDisplay 14 (data_.center.x + deltaX) (data_.center.y + deltaY) 0 data_.label ]
+
+            Ellipse data_ ->
+                [ S.ellipse (svgEllipseAttributes data_) [], SvgText.textDisplay 14 (data_.center.x + deltaX) (data_.center.y + deltaY) 0 data_.label ]
 
 
 updateData : Shape -> ShapeData -> Shape
