@@ -2,7 +2,7 @@ module Network exposing (..)
 
 
 type Node
-    = Node String
+    = Node String String
 
 
 type Edge
@@ -28,14 +28,19 @@ emptyNetwork =
 --
 
 
-createNode : String -> Node
-createNode name_ =
-    Node name_
+createNode : String -> String -> Node
+createNode name_ info_ =
+    Node name_ info_
 
 
 name : Node -> String
-name (Node name_) =
+name (Node name_ info_) =
     name_
+
+
+info : Node -> String
+info (Node name_ info_) =
+    info_
 
 
 equalNodes : Node -> Node -> Bool
@@ -44,7 +49,7 @@ equalNodes node1 node2 =
 
 
 nodeHasName : String -> Node -> Bool
-nodeHasName name_ (Node nodeName) =
+nodeHasName name_ (Node nodeName _) =
     name_ == nodeName
 
 
@@ -63,6 +68,27 @@ findNodeInNodeList name_ nodeList =
 nodeCount : Network -> Int
 nodeCount (Network nodes edges) =
     List.length nodes
+
+
+changeNodeInfo : String -> String -> Node -> Node
+changeNodeInfo nodeName nodeInfo (Node name_ info_) =
+    case name_ == nodeName of
+        True ->
+            (Node name_ nodeInfo)
+
+        False ->
+            (Node name_ info_)
+
+
+changeNodeInfoInList : String -> String -> List Node -> List Node
+changeNodeInfoInList nodeName nodeInfo nodeList =
+    nodeList
+        |> List.map (changeNodeInfo nodeName nodeInfo)
+
+
+changeNodeInfoInNetwork : String -> String -> Network -> Network
+changeNodeInfoInNetwork nodeName nodeInfo (Network nodeList edgeList) =
+    (Network (changeNodeInfoInList nodeName nodeInfo nodeList) edgeList)
 
 
 
@@ -125,7 +151,7 @@ edgeListFromSimpleEdgeList simpleEdgeList_ =
 
 simpleEdgeToEdge : SimpleEdge -> Edge
 simpleEdgeToEdge (SimpleEdge sourceName_ sinkName flow) =
-    Edge (createNode sourceName_) (createNode sinkName) flow
+    Edge (createNode sourceName_ "") (createNode sinkName "") flow
 
 
 sourceNameOfSimpleEdge : SimpleEdge -> String
@@ -286,6 +312,11 @@ totalFlow (Network nodes edges) =
 listNodes : Network -> List String
 listNodes (Network nodes edges) =
     List.map name nodes
+
+
+listNodesVerbose : Network -> List ( String, String )
+listNodesVerbose (Network nodes edges) =
+    List.map (\node -> ( name node, info node )) nodes
 
 
 edgeName : Edge -> String

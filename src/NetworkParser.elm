@@ -115,4 +115,4 @@ nodeNamesFromString str =
 nodesFromString : String -> List Node
 nodesFromString str =
     nodeNamesFromString str
-        |> List.map createNode
+        |> List.map (\str_ -> createNode str_ "")

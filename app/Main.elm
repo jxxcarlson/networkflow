@@ -112,10 +112,16 @@ update msg model =
                             |> NetworkParser.stringOfSimpleEdgeList
                     else
                         model.networkAsString
+
+                newNetwork =
+                    networkFromString newNetworkAsString
+                        |> Network.changeNodeInfoInNetwork "AA" "https://s3.amazonaws.com/noteimages/jxxcarlson/hello.jpg"
+
+                -- changeNodeInfoInList nodeName nodeInfo nodeList
             in
                 ( { model
                     | networkAsString = newNetworkAsString
-                    , network = networkFromString newNetworkAsString
+                    , network = newNetwork
                   }
                 , Cmd.none
                 )

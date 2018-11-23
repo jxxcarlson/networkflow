@@ -28,7 +28,7 @@ type alias Graph =
 {-| A vertex is s record with two fields, an integer id and a string label.
 -}
 type alias Vertex =
-    { id : Int, label : String }
+    { id : Int, label : String, info : String }
 
 
 
@@ -61,6 +61,9 @@ getPoints graph =
         vertexLabels =
             graph.vertices |> List.map .label
 
+        vertexInfoList =
+            graph.vertices |> List.map .info
+
         theta =
             2 * 3.14159265 / (toFloat n)
 
@@ -71,7 +74,10 @@ getPoints graph =
             List.range 0 (n - 1)
                 |> List.foldl (\k acc -> (acc ++ [ point k ])) []
     in
-        List.map2 (\point_ label -> { point_ | label = label }) points vertexLabels
+        List.map3 (\point_ label info -> { point_ | label = label, info = info })
+            points
+            vertexLabels
+            vertexInfoList
 
 
 rotate : Vector -> Float -> Int -> Vector
