@@ -48,6 +48,13 @@ identifier =
             |. chompWhile isInnerChar
 
 
+endsWithChar : Char -> Parser String
+endsWithChar endChar =
+    getChompedString <|
+        succeed ()
+            |. chompWhile (\char -> char /= endChar)
+
+
 isStartChar : Char -> Bool
 isStartChar char =
     Char.isAlpha char
@@ -116,3 +123,33 @@ nodesFromString : String -> List Node
 nodesFromString str =
     nodeNamesFromString str
         |> List.map (\str_ -> createNode str_ "")
+
+
+type NodeUrl
+    = NodeUrl String String
+
+
+node : NodeUrl -> String
+node (NodeUrl name _) =
+    name
+
+
+info : NodeUrl -> String
+info (NodeUrl _ info_) =
+    info_
+
+
+nodeUrlListParser : Parser (List NodeUrl)
+nodeUrlListParser =
+    many nodeUrlParser
+
+
+nodeUrlParser : Parser NodeUrl
+nodeUrlParser =
+    succeed NodeUrl
+        |. spaces
+        |= identifier
+        |. symbol ","
+        |. spaces
+        |= endsWithChar ';'
+        |. symbol ";"

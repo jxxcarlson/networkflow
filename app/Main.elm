@@ -6,6 +6,7 @@ import Element.Font as Font
 import Element.Input as Input
 import Html exposing (Html)
 import Html.Attributes
+import NetworkParser exposing (NodeUrl(..))
 import Network
     exposing
         ( Network(..)
@@ -114,15 +115,15 @@ update msg model =
                         model.networkAsString
 
                 avatarList =
-                    [ ( "AA", "https://s3.amazonaws.com/noteimages/jxxcarlson/hello.jpg" )
-                    , ( "BB", "https://s3.amazonaws.com/noteimages/jxxcarlson/hello.jpg" )
+                    [ NodeUrl "AA" "https://s3.amazonaws.com/noteimages/jxxcarlson/hello.jpg"
+                    , NodeUrl "BB" "https://s3.amazonaws.com/noteimages/jxxcarlson/hello.jpg"
                     ]
 
                 newNetwork =
                     networkFromString newNetworkAsString
 
-                updateNetwork : ( String, String ) -> Network -> Network
-                updateNetwork ( nodeName, imageUrl ) network_ =
+                updateNetwork : NodeUrl -> Network -> Network
+                updateNetwork (NodeUrl nodeName imageUrl) network_ =
                     Network.changeNodeInfoInNetwork nodeName imageUrl network_
 
                 newNetwork2 =
