@@ -1,6 +1,14 @@
-module NetworkParser exposing (..)
+module NetworkParser exposing (
+    NodeUrl(..)
+     , simpleEdgeListFromString
+     , stringOfSimpleEdgeList
+     , nodesFromString
+     , edgeListFromString
+     , networkFromString 
+     , identifier)
 
 import Parser exposing (..)
+import Parser.Extras exposing(many)
 import Network
     exposing
         ( Network(..)
@@ -63,13 +71,6 @@ isStartChar char =
 isInnerChar : Char -> Bool
 isInnerChar char =
     isStartChar char || Char.isDigit char
-
-
-{-| Apply a parser zero or more times and return a list of the results.
--}
-many : Parser a -> Parser (List a)
-many p =
-    loop [] (manyHelp p)
 
 
 manyHelp : Parser a -> List a -> Parser (Step (List a) (List a))
