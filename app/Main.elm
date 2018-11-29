@@ -161,7 +161,7 @@ mainRow model =
         , row [ centerX, spacing 60 ] (networkDisplay model)
         , row [ centerX ] [ networkEntryForm model ]
         , row [ centerX ] [ networkInput model ]
-        , row [ centerX ] [ updateNetworkButton model ]
+        -- , row [ centerX ] [ updateNetworkButton model ]
         ]
 
 
@@ -191,7 +191,7 @@ networkInput model =
 
 updateNetworkButton : Model -> Element Msg
 updateNetworkButton model =
-    Input.button Widget.buttonStyle
+    Input.button (Widget.buttonStyle ++ [moveDown 7.5])
         { onPress = Just UpdateNetwork
         , label = Element.text "Update Network"
         }
@@ -208,7 +208,7 @@ displayNetwork model =
 networkEntryForm : Model -> Element Msg
 networkEntryForm model =
     row [ spacing 8 ]
-        [ inputSourceNode model, inputTargetNode model, inputEdgeFlow model ]
+        [ inputSourceNode model, inputTargetNode model, inputEdgeFlow model, updateNetworkButton model ]
 
 
 inputSourceNode model =
