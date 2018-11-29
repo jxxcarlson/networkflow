@@ -12,7 +12,9 @@ import Network
         ( Network(..)
         , emptyNetwork
         )
-import NetworkParser exposing (networkFromString)
+import NetworkParser
+import Network exposing(SimpleEdge)
+import CSV
 import Widget
 import Svg exposing (svg)
 import Display
@@ -51,24 +53,38 @@ type alias Model =
     , sourceNode : String
     , targetNode : String
     , edgeFlow : String
+    , dataFormat : DataFormat
     }
 
+type DataFormat = CSV | SingleLine   
 
-initialNetworkString =
-    """U1, U4, 30; U1, U2, 90.4; U4, U3, 22; U2, U3, 31.4;
-V1, V4, 30; V1, V2, 90.4; V4, V3, 22; V2, V3, 31.4;
-U1, V1, 30;
+
+initialNetworkAsCSV =
+    """Lucca, Pablo, 30
+Lucca, Karla, 90.4
+Pablo, Ranulfo, 22
+Karla, Luz, 40
+Karla, Maria, 55
+Karla, Ranulfo, 31.4
+Jim, Karla, 30
+Jim, Ranulfo, 20
+Pablo, Karla, 34
+Ranulfo, Lucca, 20
+Luz, Maria, 22
+George, Maria, 31.4
+Lucca, Jim, 30
 """
 
 
 initialModel : Model
 initialModel =
     { message = "Hello!"
-    , networkAsString = initialNetworkString
-    , network = networkFromString initialNetworkString
+    , networkAsString = initialNetworkAsCSV
+    , network = CSV.networkFromString initialNetworkAsCSV
     , sourceNode = ""
     , targetNode = ""
     , edgeFlow = ""
+    , dataFormat = CSV
     }
 
 
@@ -103,14 +119,14 @@ update msg model =
                 newNetworkAsString =
                     if model.sourceNode /= "" && model.targetNode /= "" && newEdgeFlow > 0 then
                         model.networkAsString
-                            |> NetworkParser.simpleEdgeListFromString
+                            |> simpleEdgeListFromString model.dataFormat
                             |> Network.replaceSimpleEdge model.sourceNode model.targetNode newEdgeFlow
-                            |> NetworkParser.stringOfSimpleEdgeList
+                            |> CSV.csvFromEdgeList
                     else if model.sourceNode /= "" && model.targetNode /= "" && newEdgeFlow == 0 then
                         model.networkAsString
-                            |> NetworkParser.simpleEdgeListFromString
+                            |> simpleEdgeListFromString model.dataFormat
                             |> Network.deleteSimpleEdge model.sourceNode model.targetNode
-                            |> NetworkParser.stringOfSimpleEdgeList
+                            |> CSV.csvFromEdgeList
                     else
                         model.networkAsString
 
@@ -120,7 +136,7 @@ update msg model =
                     ]
 
                 newNetwork =
-                    networkFromString newNetworkAsString
+                    CSV.networkFromString newNetworkAsString
 
                 updateNetwork : NodeUrl -> Network -> Network
                 updateNetwork (NodeUrl nodeName imageUrl) network_ =
@@ -149,6 +165,12 @@ update msg model =
             ( { model | edgeFlow = str }, Cmd.none )
 
 
+simpleEdgeListFromString : DataFormat -> (String -> List SimpleEdge)
+simpleEdgeListFromString dataFormat =
+  case dataFormat of   
+    CSV -> CSV.simpleEdgeListFromString
+    SingleLine -> NetworkParser.simpleEdgeListFromString
+
 view : Model -> Html Msg
 view model =
     layout [] (mainRow model)
@@ -156,20 +178,19 @@ view model =
 
 mainRow : Model -> Element Msg
 mainRow model =
-    column [ width fill, centerX, centerY, spacing 40, Font.size 16 ]
-        [ el [ Font.bold, Font.size 24, centerX ] (text "Network")
-        , row [ centerX, spacing 60 ] (networkDisplay model)
-        , row [ centerX ] [ networkEntryForm model ]
-        , row [ centerX ] [ networkInput model ]
-        -- , row [ centerX ] [ updateNetworkButton model ]
+    column [ width fill, height fill, centerX, centerY, spacing 20, Font.size 16 ]
+        [ el [ Font.bold, Font.size 24, centerX, centerY, moveUp 20 ] (text "Network")
+        , row [ centerX, spacing 20 ] (networkDisplay model)
+        , row [ centerX, paddingEach { left = 0, right = 0, top = 20, bottom = 80} ] [ networkEntryForm model ]
         ]
+
 
 
 networkDisplay : Model -> List (Element Msg)
 networkDisplay model =
-    [ column [ centerX, alignTop ] [ displayNetwork model ]
+    [ column [ centerX, alignTop, paddingEach {left = 0, right = 80, top = 0, bottom = 0} ] [ displayNetwork model ]
     , column dataColumnStyle (displayListWithTitle "Nodes" <| displayNodes model.network)
-    , column dataColumnStyle (displayListWithTitle "Edges" <| displayEdges model.network)
+    , column dataColumnStyle (displayListWithTitle "Edges" <| [networkInput model]) 
     , column [ centerX, alignTop ] [ report model.network ]
     ]
 
@@ -180,18 +201,18 @@ dataColumnStyle =
 
 networkInput : Model -> Element Msg
 networkInput model =
-    Input.multiline [ width (px 600), height (px 120) ]
+    Input.multiline [ width (px 180), height (px 400) , spacing 8, moveUp 15]
         { onChange = InputNetworkString
         , text = model.networkAsString
         , placeholder = Nothing
-        , label = Input.labelAbove [ Font.size 18, Font.bold ] (text "Network data")
+        , label = Input.labelAbove [ Font.size 0, Font.bold ] (text "Edges")
         , spellcheck = False
         }
 
 
 updateNetworkButton : Model -> Element Msg
 updateNetworkButton model =
-    Input.button (Widget.buttonStyle ++ [moveDown 7.5])
+    Input.button (Widget.buttonStyle ++ [moveDown 7.5   ])
         { onPress = Just UpdateNetwork
         , label = Element.text "Update Network"
         }
