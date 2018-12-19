@@ -185,7 +185,6 @@ mainRow model =
         ]
 
 
-
 networkDisplay : Model -> List (Element Msg)
 networkDisplay model =
     [ column [ centerX, alignTop, paddingEach {left = 0, right = 80, top = 0, bottom = 0} ] [ displayNetwork model ]
