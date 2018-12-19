@@ -1,4 +1,11 @@
-module FlowModel2 exposing (efficiency, resilience, alpha, sustainability, sustainabilityPercentage)
+module FlowModel2
+    exposing
+        ( efficiency
+        , resilience
+        , alpha
+        , sustainability
+        , sustainabilityPercentage
+        )
 
 import SimpleGraph as SG exposing (SimpleGraph, Edge)
 import Graph

@@ -1,4 +1,14 @@
-module SimpleGraph exposing (..)
+module SimpleGraph
+    exposing
+        ( SimpleGraph
+        , Node
+        , Edge
+        , outFlow
+        , inFlow
+        , totalFlow
+        , nodeCount
+        , edgeCount
+        )
 
 import Graph exposing (Graph)
 import IntDict
@@ -46,38 +56,54 @@ totalFlow graph =
         |> List.sum
 
 
-testGraph1 : SimpleGraph
-testGraph1 =
-    Graph.fromNodesAndEdges
-        [ { id = 1, label = "1" }, { id = 2, label = "2" } ]
-        [ { from = 1, to = 2, label = 1.3 } ]
+nodeCount : SimpleGraph -> Int
+nodeCount graph =
+    graph
+        |> Graph.nodes
+        |> List.length
 
 
-testGraph2 : SimpleGraph
-testGraph2 =
-    Graph.fromNodesAndEdges
-        [ { id = 1, label = "1" }
-        , { id = 2, label = "2" }
-        , { id = 3, label = "3" }
-        , { id = 4, label = "4" }
-        ]
-        [ { from = 1, to = 2, label = 1.0 }
-        , { from = 2, to = 3, label = 1.0 }
-        , { from = 2, to = 4, label = 1.0 }
-        ]
+edgeCount : SimpleGraph -> Int
+edgeCount graph =
+    graph
+        |> Graph.edges
+        |> List.length
 
 
-testGraph3 : SimpleGraph
-testGraph3 =
-    Graph.fromNodesAndEdges
-        [ { id = 1, label = "1" }
-        , { id = 2, label = "2" }
-        , { id = 3, label = "3" }
-        , { id = 4, label = "4" }
-        , { id = 5, label = "5" }
-        ]
-        [ { from = 1, to = 2, label = 1.0 }
-        , { from = 2, to = 3, label = 1.0 }
-        , { from = 2, to = 4, label = 1.0 }
-        , { from = 2, to = 5, label = 1.0 }
-        ]
+
+--
+-- testGraph1 : SimpleGraph
+-- testGraph1 =
+--     Graph.fromNodesAndEdges
+--         [ { id = 1, label = "1" }, { id = 2, label = "2" } ]
+--         [ { from = 1, to = 2, label = 1.3 } ]
+--
+--
+-- testGraph2 : SimpleGraph
+-- testGraph2 =
+--     Graph.fromNodesAndEdges
+--         [ { id = 1, label = "1" }
+--         , { id = 2, label = "2" }
+--         , { id = 3, label = "3" }
+--         , { id = 4, label = "4" }
+--         ]
+--         [ { from = 1, to = 2, label = 1.0 }
+--         , { from = 2, to = 3, label = 1.0 }
+--         , { from = 2, to = 4, label = 1.0 }
+--         ]
+--
+--
+-- testGraph3 : SimpleGraph
+-- testGraph3 =
+--     Graph.fromNodesAndEdges
+--         [ { id = 1, label = "1" }
+--         , { id = 2, label = "2" }
+--         , { id = 3, label = "3" }
+--         , { id = 4, label = "4" }
+--         , { id = 5, label = "5" }
+--         ]
+--         [ { from = 1, to = 2, label = 1.0 }
+--         , { from = 2, to = 3, label = 1.0 }
+--         , { from = 2, to = 4, label = 1.0 }
+--         , { from = 2, to = 5, label = 1.0 }
+--         ]
