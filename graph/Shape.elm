@@ -14,8 +14,8 @@ import Affine
 import ColorRecord exposing (..)
 import Svg as S exposing (..)
 import Svg.Attributes exposing (..)
-import Vector exposing (Vector)
 import SvgText
+import Vector exposing (Vector)
 
 
 {-| A type for representing shapes: rectangles or ellipses
@@ -55,7 +55,7 @@ affineTransform coefficients shape =
         newShapeData =
             { shapeData | center = newCenter, dimensions = newDimensions }
     in
-        updateData shape newShapeData
+    updateData shape newShapeData
 
 
 {-| Produce an SVG representation of a shape.
@@ -69,33 +69,33 @@ draw shape =
         deltaY =
             30
     in
-        case shape of
-            Rect data_ ->
-                [ S.rect (svgRectAttributes data_) [], SvgText.textDisplay 14 (data_.center.x + deltaX) (data_.center.y + deltaY) 0 data_.label ]
+    case shape of
+        Rect data_ ->
+            [ S.rect (svgRectAttributes data_) [], SvgText.textDisplay 14 (data_.center.x + deltaX) (data_.center.y + deltaY) 0 data_.label ]
 
-            Ellipse data_ ->
-                [ S.ellipse (svgEllipseAttributes data_) []
-                , S.image
-                    [ x (String.fromFloat (data_.center.x - 20))
-                    , y (String.fromFloat (data_.center.y - 20))
-                    , width "40px"
-                    , height "40px"
-                    , xlinkHref data_.info
+        Ellipse data_ ->
+            [ S.ellipse (svgEllipseAttributes data_) []
+            , S.image
+                [ x (String.fromFloat (data_.center.x - 20))
+                , y (String.fromFloat (data_.center.y - 20))
+                , width "40px"
+                , height "40px"
+                , xlinkHref data_.info
 
-                    --, xlinkHref ""
-                    -- , xlinkHref "https://s3.amazonaws.com/noteimages/jxxcarlson/hello.jpg"
-                    ]
-                    []
-                , SvgText.textDisplay 14 (data_.center.x + deltaX) (data_.center.y + deltaY) 0 data_.label
+                --, xlinkHref ""
+                -- , xlinkHref "https://s3.amazonaws.com/noteimages/jxxcarlson/hello.jpg"
                 ]
+                []
+            , SvgText.textDisplay 14 (data_.center.x + deltaX) (data_.center.y + deltaY) 0 data_.label
+            ]
 
 
 
 {-
 
    <svg width="5cm" height="4cm" version="1.1"
-          xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-   	<image xlink:href="firefox.jpg" x="0" y="0" height="50px" width="50px"/>
+   xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+   <image xlink:href="firefox.jpg" x="0" y="0" height="50px" width="50px"/>
    </svg>
 
 -}
@@ -139,12 +139,12 @@ moveTo position shape =
         newShapeData =
             { shapeData | center = newCenter }
     in
-        case shape of
-            Rect _ ->
-                Rect newShapeData
+    case shape of
+        Rect _ ->
+            Rect newShapeData
 
-            Ellipse _ ->
-                Ellipse newShapeData
+        Ellipse _ ->
+            Ellipse newShapeData
 
 
 {-| Translate the center of a shape.
@@ -164,12 +164,12 @@ moveBy displacement shape =
         newShapeData =
             { shapeData | center = newCenter }
     in
-        case shape of
-            Rect _ ->
-                Rect newShapeData
+    case shape of
+        Rect _ ->
+            Rect newShapeData
 
-            Ellipse _ ->
-                Ellipse newShapeData
+        Ellipse _ ->
+            Ellipse newShapeData
 
 
 {-| Rescale a shape.
@@ -195,12 +195,12 @@ scaleBy factor shape =
         newShapeData =
             { shapeData | center = newCenter, dimensions = newDimensions }
     in
-        case shape of
-            Rect _ ->
-                Rect newShapeData
+    case shape of
+        Rect _ ->
+            Rect newShapeData
 
-            Ellipse _ ->
-                Ellipse newShapeData
+        Ellipse _ ->
+            Ellipse newShapeData
 
 
 svgRectAttributes : ShapeData -> List (Attribute msg)
